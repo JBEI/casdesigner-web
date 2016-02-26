@@ -1,0 +1,8 @@
+Create Models
+	Activate models
+Create a view (type of web page)
+	Generate the url of the view
+	Each view returns an HttpResponse
+Generate html templates for each view
+	Make namespaces for the URLS
+	

@@ -1,0 +1,25 @@
+.reveal-if-active {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: scale(0.8);
+  transition: 0.5s; }
+  input[type="radio"]:checked ~ .reveal-if-active {
+    opacity: 1;
+    max-height: 500px;
+    overflow: visible;
+    padding: 10px 20px;
+    transform: scale(1); }
+
+div {
+  width: 1000px;
+  word-wrap: break-word;
+}
+
+table, th, td {
+    border: 1px solid black;
+    
+}
+
+
+/*# sourceMappingURL=style.css.map */

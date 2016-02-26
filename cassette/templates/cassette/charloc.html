@@ -1,0 +1,78 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+<h1>Insert DNA into a characterized locus</h1>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>chrom. loc.</th>
+      <th>exp. lev.</th>
+      <th>name</th>
+      <th>sequence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>208a</th>
+      <td>Scer02</td>
+      <td>1.0</td>
+      <td>208a</td>
+      <td>GTCCGCTAAACAAAAGATCT</td>
+    </tr>
+    <tr>
+      <th>1014a</th>
+      <td>Scer10</td>
+      <td>1.2</td>
+      <td>1014a</td>
+      <td>TTATGTGCGTATTGCTTTCA</td>
+    </tr>
+    <tr>
+      <th>1114a</th>
+      <td>Scer11</td>
+      <td>1.1</td>
+      <td>1114a</td>
+      <td>CTTGTGAAACAAATAATTGG</td>
+    </tr>
+    <tr>
+      <th>607c</th>
+      <td>Scer06</td>
+      <td>1.1</td>
+      <td>607c</td>
+      <td>CTATTTTTGCTTTCTGCACA</td>
+    </tr>
+    <tr>
+      <th>308a</th>
+      <td>Scer03</td>
+      <td>1.4</td>
+      <td>308a</td>
+      <td>TAGGATACAAGTGTCTGTGC</td>
+    </tr>
+    <tr>
+      <th>1021b</th>
+      <td>Scer10</td>
+      <td>1.0</td>
+      <td>1021b</td>
+      <td>CCTCTGTGTGGTGGTAATTG</td>
+    </tr>
+    <tr>
+      <th>720a</th>
+      <td>Scer07</td>
+      <td>1.0</td>
+      <td>720a</td>
+      <td>CAACAATTGTTACAATAGTA</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>From the table above, which cutsite do you want, e.g. 208a?</p>
+
+<form action = "/cassette/charlocus/" method = "post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type = "submit" value = "Next" />
+</form>
+
+

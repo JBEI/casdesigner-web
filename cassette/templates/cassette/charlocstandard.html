@@ -1,0 +1,13 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+<h1>Insert DNA into a characterized locus</h1>
+
+<form action = "/cassette/charlocus/standard/" method = "post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type = "submit" value = "Next" />
+</form>
+
+

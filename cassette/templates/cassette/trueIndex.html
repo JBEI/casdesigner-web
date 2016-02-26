@@ -1,0 +1,110 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+
+<h1>Welcome to SynBioCAD version 0.1 beta!</h1>
+
+<p>Right now, we're going to assume you're working with S. cerevisiae.<br> What would you like to do today?</p>
+
+<form action = "" method = "post">
+	{% csrf_token %}
+	<div>
+		<div>
+			<input type= "radio" name="choices0" id="choices0-1">
+			<label for="choices0-1">Insert DNA into a characterized locus.</label>
+
+			<div class = "reveal-if-active">
+				<div>
+					<input type= "radio" name="choices1" id="choices1-1">
+					<label for="choices1-1">Insert a pre-built custom cassette.</label>
+
+					<div class = "reveal-if-active">
+						{{ form.name1.label }} {{ form.name1 }} <br>
+						{{ form.sequence1.label}} {{ form.sequence1 }} <br>
+					</div>
+				</div>
+
+				<div>
+					<input type= "radio" name="choices1" id="choices1-1">
+					<label for="choices1-1">Construct a cassette using standard promoters.</label>
+
+					<div class = "reveal-if-active">
+						{{ form.promoterName1.label }} {{ form.promoterName1 }} <br>
+						{{ form.terminatorName1.label}} {{ form.terminatorName1 }} <br>
+						{{ form.orfName1.label }} {{ form.orfName1 }} <br>
+						{{ form.orfSeq1.label}} {{ form.orfSeq1 }} <br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<input type = "radio" name="choices0" id="choices0-2">
+			<label for="choices0-2">Edit an existing gene, e.g., delete or replace</label>
+
+			<div class = "reveal-if-active">
+				{{ form.locus.label }} {{form.locus }} <br>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-1">
+					<label for="choices2-1">Delete the protein coding DNA sequence (CDS).</label>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-2">
+					<label for="choices2-2">Replace the CDS with another CDS or pre-made fragment.</label>
+					<div class = "reveal-if-active">
+						{{ form.name2.label }} {{ form.name2 }} <br>
+						{{ form.sequence2.label}} {{ form.sequence2 }} <br>
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-3">
+					<label for="choices2-3">Replace the CDS with a standard CDS I will build for you.</label>
+					<div class = "reveal-if-active">
+						{{ form.promoterName2.label }} {{ form.promoterName2 }} <br>
+						{{ form.terminatorName2.label}} {{ form.terminatorName2 }} <br>
+						{{ form.orfName2.label }} {{ form.orfName2 }} <br>
+						{{ form.orfSeq2.label}} {{ form.orfSeq2 }} <br>
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-4" disabled>
+					<label for="choices2-4">Replace the CDS with a custom cassette (NOT IMPLEMENTED!)</label>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-5" disabled>
+					<label for="choices2-5">Replace a specified region near your target gene (NOT YET IMPLEMENTED!)</label>
+				</div>
+
+		</div>
+		<div>
+			<input type = "radio" name="choices0" id="choices0-3">
+			<label for="choices0-3">Build a custom cassette</label>
+			<div class = "reveal-if-active">
+				<div> 
+					<input type= "radio" name="choices3" id="choices3-1">
+					<label for="choices3-1">Insert a pre-built custom cassette</label>
+					<div class = "reveal-if-active">
+						{{ form.N1.label }} {{ form.N1 }} <br>
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices3" id="choices3-2">
+					<label for="choices3-2">Construct a cassette using standard promoters</label>
+					<div class = "reveal-if-active">
+						{{ form.N2.label }} {{ form.N2 }} <br>
+						{{ form.toVary.label }} {{ form.toVary }} <br>
+						{{ form.variants.label }} {{ form.variants }} <br>
+					</div>
+
+				</div>
+		</div>
+	</div>
+</form>
+
+

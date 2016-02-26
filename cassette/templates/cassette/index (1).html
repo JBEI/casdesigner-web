@@ -1,0 +1,15 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+<h1>Welcome to SynBioCAD version 0.1 beta!</h1>
+
+<p>Right now, we're going to assume you're working with S. cerevisiae.<br> What would you like to do today?</p>
+
+<form action = "" method = "post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type = "submit" value = "Next" />
+</form>
+
+

@@ -1,0 +1,34 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+<h1>Assembly complete!</h1>
+
+For the original cassette: 
+<div>
+<table> 
+	{% for n in original %}
+	<tr>
+		<td><div>{{ n }}</div></td> 
+	</tr>
+	{% endfor %}
+</table>
+{% if variants %}
+</div>
+{% for record in variants %}
+<div>
+<table>
+<tr>
+	<td>Variant {{ forloop.counter }}</td><br>
+</tr>
+	{% for r in record %}
+		{% for p in r %}
+		<tr>
+			<td><div>{{ p }}</div></td> <br>
+		</tr>
+		{% endfor %}
+	{% endfor %}
+</table>
+</div>
+{% endfor %}
+{% endif %}

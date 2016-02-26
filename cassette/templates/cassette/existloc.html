@@ -1,0 +1,30 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+<h1>Insert DNA into an existing locus</h1>
+
+<form action = "/cassette/existinglocus/" method = "post">
+  {% csrf_token %}
+  {{ form.non_field_errors}}
+  <div class = "span4">
+  	{{ form.choices.0 }}<br></span>
+
+  </div>
+  
+  <div class = "span4">
+  	{{ form.choices.1 }} <br>
+  	{{ form.insertGene.label }} {{ form.insertGene }} <br>
+  	{{ form.insertSeq.label }} {{ form.insertSeq }} <br>
+  </div>
+
+  <div class = "span4" > 
+  	{{ form.choices.2 }} <br> 
+  	{{ form.insertGene.label }} {{ form.insertGene }} <br> 
+  	{{ form.insertSeq.label }} {{ form.insertSeq }} <br> 
+  	{{ form.promoter.label }} {{ form.promoter }} <br> 
+  	{{ form.terminator.label }} {{ form.terminator }} <br>
+  <input type = "submit" value = "Next" />
+</form>
+
+

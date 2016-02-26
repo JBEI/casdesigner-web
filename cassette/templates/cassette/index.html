@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+	var counter1 = 1;
+	function addInput1(divName){
+		var newdiv = document.createElement('div');
+		newdiv.innerHTML = "Gene " + (counter1 + 1) + " " + "<input type='text' id='geneList1[]' name='geneList1[]'> <br>" + "Sequence " + (counter1 + 1) + " " + "<input type='text' id='seqList1[]' name='seqList1[]''> <br> <br>";
+		document.getElementById(divName).appendChild(newdiv);
+		counter1++;
+	}
+</script>
+
+<script>
+	var counter2 = 1;
+	function addInput2(divName){
+		var newdiv = document.createElement('div');
+		newdiv.innerHTML = "Gene " + (counter2 + 1) + " " + "<input type='text' id='geneList2[]' name='geneList2[]'> <br>" + "Sequence" + (counter2 + 1) + " " + "<input type='text' id='seqList2[]' name='seqList2[]''> <br> <br>";
+		document.getElementById(divName).appendChild(newdiv);
+		counter2++;
+	}
+</script>
+
+<script>
+	var counter3 = 1;
+	function addInput3(divName){
+		var newdiv = document.createElement('div');
+		newdiv.innerHTML = "Variant " + (counter3 + 1) + " " + "<input type='text' id='geneList3[]' name='geneList3[]'> <br>" + "Sequence" + (counter3 + 1) + " " + "<input type='text' id='seqList3[]' name='seqList3[]''> <br> <br>";
+		document.getElementById(divName).appendChild(newdiv);
+		counter3++;
+	}
+</script>
+
+</head>
+
+<h1>Welcome to SynBioCAD version 0.1 beta!</h1>
+
+<p>Right now, we're going to assume you're working with S. cerevisiae.<br> What would you like to do today?</p>
+<p>If you were redirected to this page, required fields were not filled out.</p>
+
+<form action = "" method = "post">
+	{% csrf_token %}
+	<div>
+		<div>
+			<input type= "radio" name="choices0" id="choices0-1" value = "1">
+			<label for="choices0-1">Insert DNA into a characterized locus.</label> <br> 
+
+			<div class = "reveal-if-active">
+				<div>
+					{{ table | safe }}
+					<label for="cutsite">What is the cutsite you would like to target? (e.g. 208a) </label> <br> 
+					<input type="text" id="cutsite" name="cutsite" class="require-if-active" data-require-pair="#choices0-1">
+				</div>
+				<div>
+					<input class = "require-if-active" type= "radio" name="choices1" id="choices1-1" data-require-pair="#choices0-1" value = "1">
+					<label for="choices1-1">Insert a pre-built custom cassette.</label> <br> 
+
+					<div class = "reveal-if-active">
+
+						<label for="name1">What is the name of the ORF?</label> <br> 
+						<input type="text" id="name1" name="name1" class="require-if-active" data-require-pair="#choices1-1"> <br>
+						<label for = "sequence1"> What is the sequence of the ORF?</label> <br> 
+						<input type="text" id="sequence1" name="sequence1" class="require-if-active" data-require-pair="#choices1-1"> <br>
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+
+				<div>
+					<input type= "radio" name="choices1" id="choices1-2" value = "2">
+					<label for="choices1-2">Construct a cassette using standard promoters.</label> <br> 
+
+					<div class = "reveal-if-active">
+						<label for="promoterName1">Which PROMOTER would you like to use (e.g. TDH3)?: </label> <br> 
+						<input type="text" id="promoterName1" name="promoterName1" class="require-if-active" data-require-pair="#choices1-2"> <br>
+						<label for = "terminatorName1"> Which TERMINATOR would you like to use (e.g. ADH1)?: </label> <br> 
+						<input type="text" id="terminatorName1" name="terminatorName1" class="require-if-active" data-require-pair="#choices1-2"> <br>
+						<label for="orfName1">What is the name of your custom gene (e.g. K1GapDH)?</label> <br> 
+						<input type="text" id="orfName1" name="orfName1" class="require-if-active" data-require-pair="#choices1-2"> <br>
+						<label for = "orfSeq1"> What is the sequence of your custom gene?: </label> <br> 
+						<input type="text" id="orfSeq1" name="orfSeq1" class="require-if-active" data-require-pair="#choices1-2"> <br>
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<input type = "radio" name="choices0" id="choices0-2" value = "2">
+			<label for="choices0-2">Edit an existing gene, e.g., delete or replace</label> <br> 
+
+			<div class = "reveal-if-active">
+				<div>
+					<label for="locus">What is the locus you would like to target? (e.g. OAF1) </label> <br> 
+					<input type="text" id="locus" name="locus" class="require-if-active" data-require-pair="#choices0-2">
+				</div>
+
+				<div> 
+					<input class = "RadioSelect" type= "radio" name="choices2" id="choices2-1" data-require-pair="#choices0-2" value = "1">
+					<label for="choices2-1">Delete the protein coding DNA sequence (CDS).</label> <br> 
+					<div class = "reveal-if-active">
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-2" value = "2">
+					<label for="choices2-2">Replace the CDS with another CDS or pre-made fragment.</label> <br> 
+					<div class = "reveal-if-active">
+						<label for="name2">What is the name of the ORF?</label> <br> 
+						<input type="text" id="name2" name="name2" class="require-if-active" data-require-pair="#choices2-2"> <br>
+						<label for = "sequence2"> What is the sequence of the ORF?</label> <br> 
+						<input type="text" id="sequence2" name="sequence2" class="require-if-active" data-require-pair="#choices2-2"> <br>
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-3" value = "3">
+					<label for="choices2-3">Replace the CDS with a standard CDS I will build for you.</label> <br> 
+					<div class = "reveal-if-active">
+						<label for="promoterName2">Which PROMOTER would you like to use (e.g. TDH3)?: </label> <br> 
+						<input type="text" id="promoterName2" name="promoterName2" class="require-if-active" data-require-pair="#choices2-3"> <br>
+						<label for = "terminatorName2"> Which TERMINATOR would you like to use (e.g. ADH1)?: </label> <br> 
+						<input type="text" id="terminatorName2" name="terminatorName2" class="require-if-active" data-require-pair="#choices2-3"> <br>
+						<label for="orfName2">What is the name of your custom gene (e.g. K1GapDH)?</label> <br> 
+						<input type="text" id="orfName2" name="orfName2" class="require-if-active" data-require-pair="#choices2-3"> <br>
+						<label for = "orfSeq2"> What is the sequence of your custom gene?: </label> <br> 
+						<input type="text" id="orfSeq2" name="orfSeq2" class="require-if-active" data-require-pair="#choices2-3"> <br>
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-4" value = "4" disabled>
+					<label for="choices2-4">Replace the CDS with a custom cassette (NOT IMPLEMENTED!)</label> <br> 
+					<div class = "reveal-if-active">
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices2" id="choices2-5" value = "5" disabled>
+					<label for="choices2-5">Replace a specified region near your target gene (NOT YET IMPLEMENTED!)</label> <br> 
+					<div class = "reveal-if-active">
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+
+		</div>
+		<div>
+			<input type = "radio" name="choices0" id="choices0-3" value = "3">
+			<label for="choices0-3">Build a custom cassette</label> <br> 
+			<div class = "reveal-if-active">
+				<div> 
+					<input class="require-if-active" type= "radio" name="choices3" id="choices3-1" data-require-pair="#choices0-3" value = "1">
+					<label for="choices3-1">Insert a pre-built custom cassette</label> <br> 
+					<div class = "reveal-if-active">
+						<label for="geneList1">List the genes you want to stitch along with their sequences. </label> <br> 
+						<div id = "dynamicInput1">
+							Gene 1 <input type="text" id="geneList1[]" name="geneList1[]"> <br>
+							Sequence 1 <input type="text" id="seqList1[]" name="seqList1[]"> <br><br>
+						</div>
+						<input type="button" value = "Add another gene" onClick = "addInput1('dynamicInput1');">
+
+						<input type = "submit" value = "Submit" />
+					</div>
+				</div>
+
+				<div> 
+					<input type= "radio" name="choices3" id="choices3-2" value = "2">
+					<label for="choices3-2">Construct a cassette using standard promoters</label> <br> 
+					<div class = "reveal-if-active">
+						<label for="geneList2">List the genes you want to stitch along with their sequences. </label> <br> 
+						<div id = "dynamicInput2">
+							Gene 1 <input type="text" id="geneList2[]" name="geneList2[]"> <br>
+							Sequence 1 <input type="text" id="seqList2[]" name="seqList2[]"> <br><br>
+						</div>
+						<input type="button" value = "Add another gene" onClick = "addInput2('dynamicInput2');"> <br><br>
+
+						<label for="toVary">Which gene do you want to be varied among those listed? (e.g. 2 for second): </label> <br> 
+
+						<input type="text" id="toVary" name="toVary" class="require-if-active"> <br>
+
+						<label for="geneList3">List the genes you want to act as variants along with their sequences. </label> <br> 
+						<div id = "dynamicInput3">
+							Variant 1 <input type="text" id="geneList3[]" name="geneList3[]"> <br>
+							Sequence 1 <input type="text" id="seqList3[]" name="seqList3[]"> <br><br>
+						</div>
+						<input type="button" value = "Add another variant" onClick = "addInput3('dynamicInput3');">
+						<input type = "submit" value = "Submit" />
+					</div>
+
+				</div>
+		</div>
+	</div>
+</form>
+
+</html>
