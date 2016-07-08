@@ -65,7 +65,7 @@ def index(request):
 			request.session['R'] = R
 			request.session['seqLen'] = seqLen
 			request.session['donorSeq'] = donorSeq
-			return HttpResponseRedirect('/cassetteBuilder/results')
+			return HttpResponseRedirect('/cassette/results')
 
 		elif choice0 == "2":
 			locus = request.POST['locus']
@@ -97,7 +97,7 @@ def index(request):
 			request.session['R'] = R
 			request.session['seqLen'] = seqLen
 			request.session['donorSeq'] = donorSeq
-			return HttpResponseRedirect('/cassetteBuilder/results')
+			return HttpResponseRedirect('/cassette/results')
 
 		elif choice0 == "3":
 			choice3 = request.POST['choices3']
@@ -118,7 +118,7 @@ def index(request):
 
 				request.session['customAnswer'] = answer
 
-			return HttpResponseRedirect('/cassetteBuilder/customResults')
+			return HttpResponseRedirect('/cassette/customResults')
 
 	# If a GET (or any other method)we'll create a blank form) 
 	else:
