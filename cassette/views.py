@@ -165,7 +165,7 @@ def editEmpty(name, sequence, cutname, promoter = None, terminator = None):
 	location=cutFrame.loc[cutname,'chrom. loc.']+".fasta"
 	cutSequence=cutFrame.loc[cutname,'sequence']
 
-	ChromosomeSeq=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\\" + location), "fasta").seq
+	ChromosomeSeq=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", location), "fasta").seq
 	
 	if ChromosomeSeq.find(cutSequence)==-1:
 		ChromosomeSeq=ChromosomeSeq.reverse_complement()
@@ -263,37 +263,37 @@ def fetchNeighbor(NeighborRecord, direction, distance):
 	# contains in the "features" the systematic name, wherein the second letter
 	# corresponds to chromosome number, e.g., 1=A etc
 	if NeighborRecord.features[1]=="A":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer01.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer01.fasta"), "fasta")
 	if NeighborRecord.features[1]=="B":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer02.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer02.fasta"), "fasta")
 	if NeighborRecord.features[1]=="C":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer03.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer03.fasta"), "fasta")
 	if NeighborRecord.features[1]=="D":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer04.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer04.fasta"), "fasta")
 	if NeighborRecord.features[1]=="E":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer05.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer05.fasta"), "fasta")
 	if NeighborRecord.features[1]=="F":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer06.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer06.fasta"), "fasta")
 	if NeighborRecord.features[1]=="G":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer07.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer07.fasta"), "fasta")
 	if NeighborRecord.features[1]=="H":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer08.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer08.fasta"), "fasta")
 	if NeighborRecord.features[1]=="I":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer09.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer09.fasta"), "fasta")
 	if NeighborRecord.features[1]=="J":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer10.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer10.fasta"), "fasta")
 	if NeighborRecord.features[1]=="K":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer11.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer11.fasta"), "fasta")
 	if NeighborRecord.features[1]=="L":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer12.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer12.fasta"), "fasta")
 	if NeighborRecord.features[1]=="M":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer13.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer13.fasta"), "fasta")
 	if NeighborRecord.features[1]=="N":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer14.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer14.fasta"), "fasta")
 	if NeighborRecord.features[1]=="O":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer15.fasta"), "fasta")
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer15.fasta"), "fasta")
 	if NeighborRecord.features[1]=="P":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes\Scer16.fasta"), "fasta") 
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer16.fasta"), "fasta") 
 
 	
 	
