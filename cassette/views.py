@@ -123,9 +123,7 @@ def index(request):
 	# If a GET (or any other method)we'll create a blank form) 
 	else:
 		form = TrueIndexForm()
-	df = pd.read_excel(os.path.join(PROJECT_ROOT, "cutsites.xlsx"))
-	table = df.to_html(index=False)
-	return render(request, 'cassette/index.html', {'form': form, 'table': table})
+	return render(request, 'cassette/index.html', {'form': form})
 
 def results(request):
 	Lup = request.session.get('Lup')
