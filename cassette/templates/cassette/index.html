@@ -100,7 +100,7 @@
 
 				<div> 
 					<input class = "RadioSelect" type= "radio" name="choices2" id="choices2-1" data-require-pair="#choices0-2" value = "1">
-					<label for="choices2-1">Delete the protein coding DNA sequence (CDS).</label> <br> 
+            <label for="choices2-1">DELETE the CDS cleanly&mdash;from start to stop codon</label> <br> 
 					<div class = "reveal-if-active">
 						<input type = "submit" value = "Submit" />
 					</div>
@@ -108,7 +108,7 @@
 
 				<div> 
 					<input type= "radio" name="choices2" id="choices2-2" value = "2">
-					<label for="choices2-2">Replace the CDS with another CDS or pre-made fragment.</label> <br> 
+					<label for="choices2-2">Replace the CDS with another CDS</label> <br> 
 					<div class = "reveal-if-active">
 						<label for="name2">What is the name of the ORF?</label> <br> 
 						<input type="text" id="name2" name="name2" class="require-if-active" data-require-pair="#choices2-2"> <br>
@@ -120,7 +120,7 @@
 
 				<div> 
 					<input type= "radio" name="choices2" id="choices2-3" value = "3">
-					<label for="choices2-3">Replace the CDS with a standard CDS I will build for you.</label> <br> 
+					<label for="choices2-3">Replace the CDS with an expression cassette I will help you build</label> <br> 
 					<div class = "reveal-if-active">
 						<label for="promoterName2">Which PROMOTER would you like to use (e.g. TDH3)?: </label> <br> 
 						<input type="text" id="promoterName2" name="promoterName2" class="require-if-active" data-require-pair="#choices2-3"> <br>
@@ -130,22 +130,6 @@
 						<input type="text" id="orfName2" name="orfName2" class="require-if-active" data-require-pair="#choices2-3"> <br>
 						<label for = "orfSeq2"> What is the sequence of your custom gene?: </label> <br> 
 						<input type="text" id="orfSeq2" name="orfSeq2" class="require-if-active" data-require-pair="#choices2-3"> <br>
-						<input type = "submit" value = "Submit" />
-					</div>
-				</div>
-
-				<div> 
-					<input type= "radio" name="choices2" id="choices2-4" value = "4" disabled>
-					<label for="choices2-4">Replace the CDS with a custom cassette (NOT IMPLEMENTED!)</label> <br> 
-					<div class = "reveal-if-active">
-						<input type = "submit" value = "Submit" />
-					</div>
-				</div>
-
-				<div> 
-					<input type= "radio" name="choices2" id="choices2-5" value = "5" disabled>
-					<label for="choices2-5">Replace a specified region near your target gene (NOT YET IMPLEMENTED!)</label> <br> 
-					<div class = "reveal-if-active">
 						<input type = "submit" value = "Submit" />
 					</div>
 				</div>
@@ -172,7 +156,7 @@
 
 				<div> 
 					<input type= "radio" name="choices3" id="choices3-2" value = "2">
-					<label for="choices3-2">Construct a cassette using standard promoters</label> <br> 
+					<label for="choices3-2">Construct a cassette using standard promoter and terminator</label> <br> 
 					<div class = "reveal-if-active">
 						<label for="geneList2">List the genes you want to stitch along with their sequences. </label> <br> 
 						<div id = "dynamicInput2">
