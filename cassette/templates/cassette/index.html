@@ -40,14 +40,15 @@
 <h1>Welcome to CASdesigner version 0.1 beta!</h1>
 
 <p>Right now, we're going to assume you're working with S. cerevisiae.<br> What would you like to do today?</p>
-<p>If you were redirected to this page, required fields were not filled out.</p>
+
+<p>For a detailed user manual and feedback, please go to this <a href="https://docs.google.com/document/d/11YNoUBtit4rkWZQr_ZclzAOTE_HGMtgB3H_6cvq1Y24">google doc</a>. See our <a href="https://github.com/JBEI/CASdesigner/blob/master/LICENSE">license</a> and <a href="https://github.com/JBEI/CASdesigner/blob/master/COPYRIGHT">legal information</a>. Good luck!</p>
 
 <form action = "" method = "post">
 	{% csrf_token %}
 	<div>
 		<div>
 			<input type= "radio" name="choices0" id="choices0-1" value = "1">
-			<label for="choices0-1">Insert DNA into a characterized locus.</label> <br> 
+			<label for="choices0-1">Add to empty (insert DNA into a characterized locus)</label> <br> 
 
 			<div class = "reveal-if-active">
 				<div>
@@ -89,7 +90,7 @@
 		</div>
 		<div>
 			<input type = "radio" name="choices0" id="choices0-2" value = "2">
-			<label for="choices0-2">Edit an existing gene, e.g., delete or replace</label> <br> 
+			<label for="choices0-2">Edit existing (delete or replace a gene of interest)</label> <br> 
 
 			<div class = "reveal-if-active">
 				<div>
@@ -152,7 +153,7 @@
 		</div>
 		<div>
 			<input type = "radio" name="choices0" id="choices0-3" value = "3">
-			<label for="choices0-3">Build a custom cassette</label> <br> 
+			<label for="choices0-3">Stitch (get primers to stitch together N fragments)</label> <br> 
 			<div class = "reveal-if-active">
 				<div> 
 					<input class="require-if-active" type= "radio" name="choices3" id="choices3-1" data-require-pair="#choices0-3" value = "1">
