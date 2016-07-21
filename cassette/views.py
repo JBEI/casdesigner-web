@@ -46,7 +46,7 @@ def index(request):
 				name = request.POST['name1']
 				sequence = request.POST['sequence1']
 				ster = request.POST['sequence1']
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq = editEmpty(name, sequence, cutsite)
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(name, sequence, cutsite)
 				
 
 			elif choice1 == "2":
@@ -55,7 +55,7 @@ def index(request):
 				promoterName = request.POST['promoterName1']
 				terminatorName = request.POST['terminatorName1']
 
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq = editEmpty(orfName, orfSeq, cutsite, promoterName, terminatorName)
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(orfName, orfSeq, cutsite, promoterName, terminatorName)
 				
 			request.session['Lup'] = Lup
 			request.session['Rup'] = Rup
@@ -64,7 +64,7 @@ def index(request):
 			request.session['L'] = L
 			request.session['R'] = R
 			request.session['seqLen'] = seqLen
-			request.session['donorSeq'] = donorSeq
+			request.session['donorSeq'] = rendered
 			return HttpResponseRedirect('/cassette/results')
 
 		elif choice0 == "2":
@@ -72,17 +72,17 @@ def index(request):
 			choice2 = request.POST['choices2']
 
 			if choice2 == "1":
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq = editExisting(locus, 1)
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editExisting(locus, 1)
 			elif choice2 == "2":
 				name2 = request.POST['name2']
 				sequence2 = request.POST['sequence2']
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq = editExisting(locus, 2, NewGeneName=name2, NewGeneSeq=sequence2)
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editExisting(locus, 2, NewGeneName=name2, NewGeneSeq=sequence2)
 			elif choice2 == "3":
 				promoterName = request.POST['promoterName2']
 				terminatorName = request.POST['terminatorName2']
 				orfName = request.POST['orfName2']
 				orfSeq = request.POST['orfSeq2']
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq = editExisting(locus, 3, promoter=promoterName,terminator=terminatorName,NewGeneName=orfName,NewGeneSeq=orfSeq)
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editExisting(locus, 3, promoter=promoterName,terminator=terminatorName,NewGeneName=orfName,NewGeneSeq=orfSeq)
 
 			elif choice2 == "4":
 				pass
@@ -96,7 +96,7 @@ def index(request):
 			request.session['L'] = L
 			request.session['R'] = R
 			request.session['seqLen'] = seqLen
-			request.session['donorSeq'] = donorSeq
+			request.session['donorSeq'] = rendered
 			return HttpResponseRedirect('/cassette/results')
 
 		elif choice0 == "3":
@@ -387,7 +387,34 @@ def stitch(fragments):
 	sequenceLength = len(donor.seq)
 	donorSequence = donor.seq
 
-	return str(Lup), str(Rup), str(Ldown), str(Rdown), str(L), str(R), "Sequence Length: " + str(sequenceLength), "Sequence: " + str(donorSequence)
+##############################################################################
+	rendered = ""
+	
+	rendered = rendered +"\n\n\n\nHere are the primers to amplify your fragments and construct your donor DNA cassette:\n"
+	
+	for i in range (0, Nfrags):
+	    donor=donor+fragments[i]
+	
+	# The names include information on the homology provided by the overhang
+	# Note that some primers don't have overhangs
+	for i in range (0, Nfrags):
+	    if i==0:
+	        rendered = rendered +"F"+ fragments[i].name + " " + getPrimer(donor)
+	        rendered = rendered +"R"+ fragments[i].name + "(" + fragments[i+1].name + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+	    elif i==Nfrags-1:
+	        rendered = rendered +"F"+ fragments[i].name + "(" + fragments[i-1].name + ") " + overhangPrimer(fragments[i],fragments[i-1])
+	        rendered = rendered +"R"+ fragments[i].name + " " + getPrimer(donor.reverse_complement())
+	    else:
+	        rendered = rendered +"F"+ fragments[i].name + "(" + fragments[i-1].name + ") " + overhangPrimer(fragments[i],fragments[i-1])
+	        rendered = rendered +"R"+ fragments[i].name + "(" + fragments[i+1].name + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+	
+	rendered = rendered +"\n\nThe size and sequence of your donor DNA is below."
+	
+	rendered = rendered + str(len(donor.seq))
+	
+	rendered = rendered + donor.seq
+
+	return str(Lup), str(Rup), str(Ldown), str(Rdown), str(L), str(R), "Sequence Length: " + str(sequenceLength), "Sequence: " + str(donorSequence), str(rendered)
 
 # Modified functions for input
 def standardCassette(PromoterName,TerminatorName, orfName, orfSeq):
