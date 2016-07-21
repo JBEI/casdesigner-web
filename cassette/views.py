@@ -65,6 +65,7 @@ def index(request):
 			request.session['R'] = R
 			request.session['seqLen'] = seqLen
 			request.session['donorSeq'] = rendered
+			request.session['rendered'] = rendered
 			return HttpResponseRedirect('/cassette/results')
 
 		elif choice0 == "2":
@@ -97,6 +98,7 @@ def index(request):
 			request.session['R'] = R
 			request.session['seqLen'] = seqLen
 			request.session['donorSeq'] = rendered
+			request.session['rendered'] = rendered
 			return HttpResponseRedirect('/cassette/results')
 
 		elif choice0 == "3":
@@ -134,8 +136,9 @@ def results(request):
 	R = request.session.get('R')
 	seqLen = request.session.get('seqLen')
 	donorSeq = request.session.get('donorSeq')
+	rendered = request.session.get('rendered')
 
-	return render(request, 'cassette/results.html', {'Lup': Lup, 'Rup': Rup, 'Ldown': Ldown, 'Rdown': Rdown, 'L': L, 'R': R, 'seqLen': seqLen, 'donorSeq': donorSeq})
+	return render(request, 'cassette/results.html', {'Lup': Lup, 'Rup': Rup, 'Ldown': Ldown, 'Rdown': Rdown, 'L': L, 'R': R, 'seqLen': seqLen, 'donorSeq': donorSeq, 'rendered': rendered })
 
 def customResults(request):
 	answer = request.session.get('customAnswer')
