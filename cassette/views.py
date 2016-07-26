@@ -391,7 +391,7 @@ def stitch(fragments):
 	sequenceLength = len(donor.seq)
 	donorSequence = donor.seq
 
-##############################################################################
+	# Separate rendering stage for custom cassettes
 	rendered = "<pre>"
 	
 	rendered = rendered +"Here are the primers to amplify your fragments and construct your donor DNA cassette:\n\n"
