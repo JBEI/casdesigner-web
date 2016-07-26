@@ -24,6 +24,7 @@ import pandas as pd #this is how I usually import pandas
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from textwrap import fill, wrap
 
 # define global variables
 HomologyLength = 1000
@@ -391,9 +392,9 @@ def stitch(fragments):
 	donorSequence = donor.seq
 
 ##############################################################################
-	rendered = ""
+	rendered = "<pre>"
 	
-	rendered = rendered +"\n\n\n\nHere are the primers to amplify your fragments and construct your donor DNA cassette:\n"
+	rendered = rendered +"Here are the primers to amplify your fragments and construct your donor DNA cassette:\n\n"
 	
 	for i in range (0, Nfrags):
 	    donor=donor+fragments[i]
@@ -402,22 +403,24 @@ def stitch(fragments):
 	# Note that some primers don't have overhangs
 	for i in range (0, Nfrags):
 	    if i==0:
-	        rendered = rendered +"F"+ fragments[i].id + " " + getPrimer(donor)
-	        rendered = rendered +"R"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+	        rendered = rendered +"F "+ fragments[i].id + ": " + getPrimer(donor) + "\n\n"
+	        rendered = rendered +"R "+ fragments[i].id + "(" + fragments[i+1].id + "): " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n\n"
 	    elif i==Nfrags-1:
-	        rendered = rendered +"F"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1])
-	        rendered = rendered +"R"+ fragments[i].id + " " + getPrimer(donor.reverse_complement())
+	        rendered = rendered +"F "+ fragments[i].id + "(" + fragments[i-1].id + "): " + overhangPrimer(fragments[i],fragments[i-1]) + "\n\n"
+	        rendered = rendered +"R "+ fragments[i].id + ": " + getPrimer(donor.reverse_complement()) + "\n\n"
 	    else:
-	        rendered = rendered +"F"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1])
-	        rendered = rendered +"R"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+	        rendered = rendered +"F "+ fragments[i].id + "(" + fragments[i-1].id + "): " + overhangPrimer(fragments[i],fragments[i-1]) + "\n\n"
+	        rendered = rendered +"R "+ fragments[i].id + "(" + fragments[i+1].id + "): " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n\n"
 	
-	rendered = rendered +"\n\nThe size and sequence of your donor DNA is below."
+	rendered = rendered +"\n\nThe size and sequence of your donor DNA is below.\n\n"
 	
-	rendered = rendered + str(len(donor.seq))
+	rendered = rendered + "> " + str(len(donor.seq)) + "\n\n"
 	
-	rendered = rendered + donor.seq
+	rendered = rendered + fill(str(donor.seq), 80)
 
-	return str(Lup), str(Rup), str(Ldown), str(Rdown), str(L), str(R), "Sequence Length: " + str(sequenceLength), "Sequence: " + str(donorSequence), str(rendered)
+	rendered = rendered + "</pre>"
+
+	return str(Lup), str(Rup), str(Ldown), str(Rdown), str(L), str(R), "Sequence Length: " + str(sequenceLength), "Sequence: " + str(donorSequence), fill(str(rendered), 100, replace_whitespace=False)
 
 # Modified functions for input
 def standardCassette(PromoterName,TerminatorName, orfName, orfSeq):
