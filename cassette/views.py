@@ -402,14 +402,14 @@ def stitch(fragments):
 	# Note that some primers don't have overhangs
 	for i in range (0, Nfrags):
 	    if i==0:
-	        rendered = rendered +"F"+ fragments[i].name + " " + getPrimer(donor)
-	        rendered = rendered +"R"+ fragments[i].name + "(" + fragments[i+1].name + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+	        rendered = rendered +"F"+ fragments[i].id + " " + getPrimer(donor)
+	        rendered = rendered +"R"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
 	    elif i==Nfrags-1:
-	        rendered = rendered +"F"+ fragments[i].name + "(" + fragments[i-1].name + ") " + overhangPrimer(fragments[i],fragments[i-1])
-	        rendered = rendered +"R"+ fragments[i].name + " " + getPrimer(donor.reverse_complement())
+	        rendered = rendered +"F"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1])
+	        rendered = rendered +"R"+ fragments[i].id + " " + getPrimer(donor.reverse_complement())
 	    else:
-	        rendered = rendered +"F"+ fragments[i].name + "(" + fragments[i-1].name + ") " + overhangPrimer(fragments[i],fragments[i-1])
-	        rendered = rendered +"R"+ fragments[i].name + "(" + fragments[i+1].name + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+	        rendered = rendered +"F"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1])
+	        rendered = rendered +"R"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
 	
 	rendered = rendered +"\n\nThe size and sequence of your donor DNA is below."
 	
