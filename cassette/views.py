@@ -377,6 +377,8 @@ def stitch(fragments, deletion=False):
 	L = ""
 	R = ""
 
+	# I'm not sure what this loop does (don't confuse it with the other in this method. If you can
+	# factor it out, be my guest.
 	for i in range (0, Nfrags):
 		if i==0:
 			Lup = "Lup"+ fragments[i].id + " " + getPrimer(donor)
@@ -395,9 +397,6 @@ def stitch(fragments, deletion=False):
 	rendered = "<pre>"
 
 	rendered = rendered +"Here are the primers to amplify your fragments and construct your donor DNA cassette:\n\n"
-
-	for i in range (0, Nfrags):
-			donor=donor+fragments[i]
 
 	# The names include information on the homology provided by the overhang
 	# Note that some primers don't have overhangs
