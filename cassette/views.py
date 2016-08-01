@@ -22,9 +22,8 @@ from pandas import *
 from pandas import DataFrame, read_csv
 import pandas as pd #this is how I usually import pandas
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
-from textwrap import fill, wrap
+from textwrap import fill
 
 # define global variables
 HomologyLength = 1000
