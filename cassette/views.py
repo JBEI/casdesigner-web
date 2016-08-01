@@ -1,4 +1,4 @@
-# Django imports 
+# Django imports
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -48,7 +48,7 @@ def index(request):
 				sequence = request.POST['sequence1']
 				ster = request.POST['sequence1']
 				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(name, sequence, cutsite)
-				
+
 
 			elif choice1 == "2":
 				orfName = request.POST['orfName1']
@@ -57,7 +57,7 @@ def index(request):
 				terminatorName = request.POST['terminatorName1']
 
 				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(orfName, orfSeq, cutsite, promoterName, terminatorName)
-				
+
 			request.session['Lup'] = Lup
 			request.session['Rup'] = Rup
 			request.session['Ldown'] = Ldown
@@ -123,7 +123,7 @@ def index(request):
 
 			return HttpResponseRedirect('/cassette/customResults')
 
-	# If a GET (or any other method)we'll create a blank form) 
+	# If a GET (or any other method)we'll create a blank form)
 	else:
 		form = TrueIndexForm()
 	return render(request, 'cassette/index.html', {'form': form})
@@ -168,21 +168,21 @@ def editEmpty(name, sequence, cutname, promoter = None, terminator = None):
 	cutSequence=cutFrame.loc[cutname,'sequence']
 
 	ChromosomeSeq=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", location), "fasta").seq
-	
+
 	if ChromosomeSeq.find(cutSequence)==-1:
 		ChromosomeSeq=ChromosomeSeq.reverse_complement()
 
 	StartIndex=ChromosomeSeq.find(cutSequence)
 	EndIndex=StartIndex+34
-	
+
 	UpSeq=ChromosomeSeq[StartIndex-HomologyLength:StartIndex]
 	DownSeq=ChromosomeSeq[EndIndex:EndIndex+HomologyLength]
-		
+
 	UpHomRec = SeqRecord(UpSeq, id=cutname)
 	DownHomRec = SeqRecord(DownSeq, id=cutname)
 
 	orfRecord = SeqRecord(Seq(sequence, SingleLetterAlphabet()), id=name)
-	if promoter is None: 
+	if promoter is None:
 		fragments = [UpHomRec, orfRecord, DownHomRec]
 	else:
 		PromoterGeneRec = fetchGene(promoter)
@@ -200,10 +200,11 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 	OrigGeneRecord = fetchGene(name)
 	UpHomRec = fetchNeighbor(OrigGeneRecord, "upstream", HomologyLength)
 	DownHomRec = fetchNeighbor(OrigGeneRecord, "downstream", HomologyLength)
+	cleanDeletion = False
 
 	if option == 1:
 		fragments = [UpHomRec, DownHomRec]
-		
+		cleanDeletion = True
 	elif option == 2:
 		InsertRec = SeqRecord(Seq(NewGeneSeq, SingleLetterAlphabet()), id=NewGeneName)
 		fragments = [UpHomRec, InsertRec, DownHomRec]
@@ -215,22 +216,22 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 	elif option == 5:
 		pass
 
-	return stitch(fragments)
+	return stitch(fragments, deletion=cleanDeletion)
 
 def fetchGene(GeneName):
-	
+
 	service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
 	template = service.get_template('Gene_GenomicDNA')
 
 	rows = template.rows(
 		E = {"op": "LOOKUP", "value": GeneName, "extra_value": "S. cerevisiae"}
 	)
-	
+
 	# this service seems to return multiple similar genes but we want the first one only, so count
 	# and it returns information about the gene you want
 	count=0
 	for row in rows:
-		
+
 		count=count+1
 		if count==1:
 			descr= row["description"]
@@ -245,18 +246,18 @@ def fetchGene(GeneName):
 			#print("Good choice! I have a feeling you're going to get lucky with this one.")
 			#print(" ")
 			#print("Give me a second to put some of my ducks in a circle...")
-	   
 
-			
+
+
 	#let's create a record for the oldGene
 	GeneRecord = SeqRecord(GeneSeq, id=GeneSysName)
-	
+
 	#now let's add some more information to make it useful
 	GeneRecord.name=GeneName
 	GeneRecord.features=GeneSysName
 	GeneRecord.description=descr
 
-	return GeneRecord 
+	return GeneRecord
 
 def fetchNeighbor(NeighborRecord, direction, distance):
 
@@ -295,71 +296,71 @@ def fetchNeighbor(NeighborRecord, direction, distance):
 	if NeighborRecord.features[1]=="O":
 		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer15.fasta"), "fasta")
 	if NeighborRecord.features[1]=="P":
-		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer16.fasta"), "fasta") 
+		ChromosomeRec=SeqIO.read(os.path.join(PROJECT_ROOT, "chromosomes", "Scer16.fasta"), "fasta")
 
-	
-	
+
+
 	# let's explicitely name the sequences from the seq record
 	NeighborSeq=NeighborRecord.seq
 	ChromosomeSeq=ChromosomeRec.seq
-	
+
 	# flip the sequence to orient with respect to the old gene
 	if ChromosomeSeq.find(NeighborSeq)==-1:
 		ChromosomeSeq=ChromosomeSeq.reverse_complement()
 
 	StartIndex=ChromosomeSeq.find(NeighborSeq)
 	EndIndex=StartIndex+len(NeighborSeq)
-	
+
 	if direction=="upstream":
 		DesiredSeq=ChromosomeSeq[StartIndex-distance:StartIndex]
 	if direction=="downstream":
 		DesiredSeq=ChromosomeSeq[EndIndex:EndIndex+distance]
 
-	
-	
-	
+
+
+
 	NeighborRec = SeqRecord(DesiredSeq, id=NeighborRecord.name)
-	
+
 	return NeighborRec
 
 	#print(NeighborRec)
 
 def getPrimer(currRecord):
-	
+
 
 	mp = 0
 	length = 0
 	primer = Seq("")
 
 	seq=currRecord.seq
-	
+
 	while mp <= PrimerMaxTm and length <= PrimerMaxLen:
 		primer = primer + seq[length]
 		mp = MeltingTemp.Tm_staluc(primer)
 		length += 1
 
-	return primer           
-		
+	return primer
+
 def overhangPrimer(currRecord,prevSeq):
 	#let's get the template-binding primer first
 	primer=getPrimer(currRecord)
-	
-	
+
+
 	#OK let's work on the overhang
-	maxOhLen=PrimerMaxLen-len(primer)    
+	maxOhLen=PrimerMaxLen-len(primer)
 	maxFrac=1
-	
+
 	#let's decide on a max overhang length
 	if round(len(primer)*(OverhangMaxFrac+1)) < 60:
 			 maxOhLen=round(len(primer)*OverhangMaxFrac)
-	
+
 	#the index must be an integer!!!
 	maxOhLen=int(maxOhLen)
 	ohprimer=prevSeq.seq[-maxOhLen:]+primer #we add the .seq so that it returns a string
-	
-	return ohprimer      
 
-def stitch(fragments):
+	return ohprimer
+
+def stitch(fragments, deletion=False):
 	#this function takes seq records and prints primers
 
 	#let's make an empty sequence file
@@ -393,29 +394,39 @@ def stitch(fragments):
 
 	# Separate rendering stage for custom cassettes
 	rendered = "<pre>"
-	
+
 	rendered = rendered +"Here are the primers to amplify your fragments and construct your donor DNA cassette:\n\n"
-	
+
 	for i in range (0, Nfrags):
-	    donor=donor+fragments[i]
-	
+			donor=donor+fragments[i]
+
 	# The names include information on the homology provided by the overhang
 	# Note that some primers don't have overhangs
 	for i in range (0, Nfrags):
-	    if i==0:
-	        rendered = rendered +"F-up"+ fragments[i].id + " " + getPrimer(donor) + "\n"
-	        rendered = rendered +"R-up"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n"
-	    elif i==Nfrags-1:
-	        rendered = rendered +"F-dn"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1]) + "\n"
-	        rendered = rendered +"R-dn"+ fragments[i].id + " " + getPrimer(donor.reverse_complement()) + "\n"
-	    else:
-	        rendered = rendered +"F-"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1]) + "\n"
-	        rendered = rendered +"R-"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n"
-	
+		if i==0:
+			if deletion:
+					rightFragmentId = "del"
+			else:
+				rightFragmentId = fragments[i+1].id
+
+			rendered = rendered +"F-up"+ fragments[i].id + " " + getPrimer(donor) + "\n"
+			rendered = rendered +"R-up"+ fragments[i].id + "(" + rightFragmentId + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n"
+		elif i==Nfrags-1:
+			if deletion:
+					leftFragmentId = "del"
+			else:
+				leftFragmentId = fragments[i-1].id
+
+			rendered = rendered +"F-dn"+ fragments[i].id + "(" + leftFragmentId + ") " + overhangPrimer(fragments[i],fragments[i-1]) + "\n"
+			rendered = rendered +"R-dn"+ fragments[i].id + " " + getPrimer(donor.reverse_complement()) + "\n"
+		else:
+			rendered = rendered +"F-"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1]) + "\n"
+			rendered = rendered +"R-"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n"
+
 	rendered = rendered +"\n\nThe size and sequence of your donor DNA is below.\n\n"
-	
+
 	rendered = rendered + "> " + str(len(donor.seq)) + "\n"
-	
+
 	rendered = rendered + fill(str(donor.seq), 80)
 
 	rendered = rendered + "</pre>"
@@ -424,57 +435,57 @@ def stitch(fragments):
 
 # Modified functions for input
 def standardCassette(PromoterName,TerminatorName, orfName, orfSeq):
-	
+
 	#first, the promoter
-	print("I'm going to build a standard cassette in which promoter is 600nt, terminator 250nt.") 
+	print("I'm going to build a standard cassette in which promoter is 600nt, terminator 250nt.")
 	print("First, which PROMOTER do you want to use, e.g., TDH3")
-	
+
 	PromoterGeneRec=fetchGene(PromoterName)
 	PromoterRec=fetchNeighbor(PromoterGeneRec,"upstream",600)
 	PromoterRec.id=PromoterRec.id+"ps"
-	
-	
+
+
 	#second, the terminator
 	print("Which TERMINATOR do you want to use, e.g., ADH1")
 	TerminatorGeneRec=fetchGene(TerminatorName)
 	TerminatorRec=fetchNeighbor(TerminatorGeneRec,"downstream",250)
 	TerminatorRec.id=TerminatorRec.id+"ts"
-	
-	
+
+
 	#and last, the gene
 	print("What is the name of your gene, e.g., KlGapDH")
-	
+
 	print("What's the sequence")
-	
+
 	orfRecord=SeqRecord(Seq(orfSeq, SingleLetterAlphabet()), id=orfName)
-	
+
 	insertRec=[PromoterRec,orfRecord,TerminatorRec]
 	return PromoterRec, orfRecord, TerminatorRec
 
 def buildCassette(PromoterName, TerminatorName, orfName, orfSeq):
-	
+
 	#first, the promoter
-	print("I'm going to build a standard cassette in which promoter is 600nt, terminator 250nt.") 
+	print("I'm going to build a standard cassette in which promoter is 600nt, terminator 250nt.")
 	print("First, which PROMOTER do you want to use, e.g., TDH3")
-	
+
 	PromoterGeneRec=fetchGene(PromoterName)
 	PromoterRec=fetchNeighbor(PromoterGeneRec,"upstream",600)
 	PromoterRec.id=PromoterRec.id+"ps"
-	
-	
+
+
 	#second, the terminator
 	print("Which TERMINATOR do you want to use, e.g., ADH1")
 	TerminatorGeneRec=fetchGene(TerminatorName)
 	TerminatorRec=fetchNeighbor(TerminatorGeneRec,"downstream",250)
 	TerminatorRec.id=TerminatorRec.id+"ts"
-	
+
 	#and last, the gene
 	print("What is the name of your gene, e.g., KlGapDH")
-	
+
 	print("What's the sequence")
-	
+
 	orfRecord=SeqRecord(Seq(orfSeq), id=orfName)
-	
+
 	insertRec=[PromoterRec,orfRecord,TerminatorRec]
 	return PromoterRec, orfRecord, TerminatorR
 
@@ -497,7 +508,7 @@ def variableCassette(geneList, seqList, toVary="", variants=[], variantSeq=[]):
 
 	variantRecords = []
 	variantRecords.append(records)
-	
+
 	# Executes if variants is not empty
 	counter = 0
 	if variants != []:
@@ -506,7 +517,7 @@ def variableCassette(geneList, seqList, toVary="", variants=[], variantSeq=[]):
 			sequence = variantSeq[counter]
 			Rec = SeqRecord(Seq(sequence, SingleLetterAlphabet()), id = str(counter+1))
 			Rec.name = name
-			# Make a copy of the original, switch the fragments and add it to the list. 
+			# Make a copy of the original, switch the fragments and add it to the list.
 			# Deep-copy ensures there are no pointer issues
 			tempVariant = copy.deepcopy(records)
 			tempVariant[toVary - 1] = Rec
