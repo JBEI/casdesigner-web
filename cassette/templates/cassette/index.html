@@ -135,51 +135,6 @@
 				</div>
 
 		</div>
-		<div>
-			<input type = "radio" name="choices0" id="choices0-3" value = "3">
-			<label for="choices0-3">Stitch (get primers to stitch together N fragments)</label> <br> 
-			<div class = "reveal-if-active">
-				<div> 
-					<input class="require-if-active" type= "radio" name="choices3" id="choices3-1" data-require-pair="#choices0-3" value = "1">
-					<label for="choices3-1">Insert a pre-built custom cassette</label> <br> 
-					<div class = "reveal-if-active">
-						<label for="geneList1">List the genes you want to stitch along with their sequences. </label> <br> 
-						<div id = "dynamicInput1">
-							Gene 1 <input type="text" id="geneList1[]" name="geneList1[]"> <br>
-							Sequence 1 <input type="text" id="seqList1[]" name="seqList1[]"> <br><br>
-						</div>
-						<input type="button" value = "Add another gene" onClick = "addInput1('dynamicInput1');">
-
-						<input type = "submit" value = "Submit" />
-					</div>
-				</div>
-
-				<div> 
-					<input type= "radio" name="choices3" id="choices3-2" value = "2">
-					<label for="choices3-2">Construct a cassette using standard promoter and terminator</label> <br> 
-					<div class = "reveal-if-active">
-						<label for="geneList2">List the genes you want to stitch along with their sequences. </label> <br> 
-						<div id = "dynamicInput2">
-							Gene 1 <input type="text" id="geneList2[]" name="geneList2[]"> <br>
-							Sequence 1 <input type="text" id="seqList2[]" name="seqList2[]"> <br><br>
-						</div>
-						<input type="button" value = "Add another gene" onClick = "addInput2('dynamicInput2');"> <br><br>
-
-						<label for="toVary">Which gene do you want to be varied among those listed? (e.g. 2 for second): </label> <br> 
-
-						<input type="text" id="toVary" name="toVary" class="require-if-active"> <br>
-
-						<label for="geneList3">List the genes you want to act as variants along with their sequences. </label> <br> 
-						<div id = "dynamicInput3">
-							Variant 1 <input type="text" id="geneList3[]" name="geneList3[]"> <br>
-							Sequence 1 <input type="text" id="seqList3[]" name="seqList3[]"> <br><br>
-						</div>
-						<input type="button" value = "Add another variant" onClick = "addInput3('dynamicInput3');">
-						<input type = "submit" value = "Submit" />
-					</div>
-
-				</div>
-		</div>
 	</div>
 </form>
 
