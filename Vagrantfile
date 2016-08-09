@@ -12,4 +12,8 @@ Vagrant.configure(2) do |config|
     sudo apt-get install -y pkg-config libfreetype6-dev libpng12-dev # for matplotlib
     sudo pip3 install jupyter biopython intermine pandas matplotlib xlrd
   SHELL
+
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    cd /var/www/casdesigner-web && python3 manage.py runserver 0.0.0.0:8000
+  SHELL
 end
