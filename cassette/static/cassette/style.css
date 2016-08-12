@@ -18,8 +18,42 @@ div {
 
 table, th, td {
     border: 1px solid black;
-    
+
 }
 
+body {
+  background-color: #ff9;
+}
+
+.content {
+  width: 40em;
+  margin: auto;
+  font-family: georgia;
+}
+
+a {
+  color: red;
+}
+
+a:visited {
+  color: black;
+}
+
+.author {
+  width: 10em;
+  margin: auto;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+footer {
+  padding-top: 120px;
+  padding-bottom: 40px;
+  text-align: center;
+}
+
+.tool {
+  padding-top: 30px;
+}
 
 /*# sourceMappingURL=style.css.map */
