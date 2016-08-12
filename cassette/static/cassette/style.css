@@ -22,7 +22,7 @@ table, th, td {
 }
 
 body {
-  background-color: #ff9;
+  background-color: rgba(255, 255, 153, 0.5);
 }
 
 .content {
@@ -42,8 +42,6 @@ a:visited {
 .author {
   width: 10em;
   margin: auto;
-  padding-top: 40px;
-  padding-bottom: 40px;
 }
 
 footer {
