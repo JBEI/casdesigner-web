@@ -45,7 +45,7 @@ a {
 }
 
 
-he/*ader {
+/*header {
   text-align: center;
 }
 
@@ -78,12 +78,12 @@ footer hr {
   border-top: 1px solid #eee;
 }
 
-footer a {
+/*footer a {
   padding-top: 0.5em;
   float: right;
 }
-
-footer img {
+*/
+/*footer img {
   float: left;
 }
 
@@ -91,10 +91,10 @@ footer {
   padding-top: 120px;
   padding-bottom: 40px;
   text-align: center;
-}
-
+}*/
+/*
 footer .text {
   width: 40em;
   margin: auto;
-}
+}*/
 /*# sourceMappingURL=style.css.map */
