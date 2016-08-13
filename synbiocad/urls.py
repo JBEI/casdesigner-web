@@ -18,7 +18,7 @@ from django.contrib import admin
 from cassette import views
 
 urlpatterns = [
-	url(r'^cassette/', include('cassette.urls')),
-	url(r'^$',        include('cassette.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+	url(r'^cassette/',include('cassette.urls')),
+	url(r'^',         include('cassette.urls')),
+  url(r'^admin/',   include(admin.site.urls)),
 ]
