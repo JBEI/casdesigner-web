@@ -10,6 +10,8 @@
     <title>CASdesigner</title>
     <link rel="stylesheet" href="{% static 'cassette/bootstrap.min.css'%}" />
 
+    <link rel="stylesheet" href="{% static 'cassette/bootstrap-theme.min.css'%}" />
+
     <link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
 
     <!--[if lt IE 9]>
@@ -50,34 +52,58 @@
   </head>
 
   <body>
+    <header>
 
-      <header>
+    <a href="/">
+      <img alt="CASdesigner logo" src="{% static 'cassette/logo.png' %}" >
+    </a>
 
-      <a href="/">
-        <img alt="CASdesigner logo" src="{% static 'cassette/logo.png' %}" >
-      </a>
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">CASdesigner</a>
+      </div>
 
-        <div class="nav">
-          <ul>
-            <li>
-              <a href="https://github.com/JBEI/CASdesigner-web">Source code</a>
-            </li>
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="https://github.com/JBEI/CASdesigner-web">Source code</a>
+        </li>
 
-            <li>
-              <a href="">Manual</a>
-            </li>
+        <li>
+          <a href="">Manual</a>
+        </li>
 
-            <li>
-              <a href="https://github.com/JBEI/casdesigner-web/blob/master/LICENSE">License</a>
-            </li>
+        <li>
+          <a href="https://github.com/JBEI/casdesigner-web/blob/master/LICENSE">License</a>
+        </li>
 
-            <li>
-              <a href="https://github.com/JBEI/casdesigner-web/blob/master/COPYRIGHT">Legal information</a>
-            </li>
-          </ul>
+        <li>
+          <a href="https://github.com/JBEI/casdesigner-web/blob/master/COPYRIGHT">Legal information</a>
+        </li>
+    </div><!-- /.navbar-fluid -->
+    </nav>
 
-        </div>
-      </header>
+      <div class="nav">
+        <ul>
+          <li>
+            <a href="https://github.com/JBEI/CASdesigner-web">Source code</a>
+          </li>
+
+          <li>
+            <a href="">Manual</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/JBEI/casdesigner-web/blob/master/LICENSE">License</a>
+          </li>
+
+          <li>
+            <a href="https://github.com/JBEI/casdesigner-web/blob/master/COPYRIGHT">Legal information</a>
+          </li>
+        </ul>
+
+      </div>
+    </header>
 
     <div class="content">
 

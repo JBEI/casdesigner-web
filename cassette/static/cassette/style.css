@@ -44,11 +44,11 @@ a {
   padding-top: 30px;
 }
 
-header {
+
+he/*ader {
   text-align: center;
 }
 
-/* Nav */
 .nav {
   background-color: rgb(255, 255, 153);
 }
@@ -71,7 +71,7 @@ li a {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
-}
+}*/
 
 /* Footer */
 footer hr {
