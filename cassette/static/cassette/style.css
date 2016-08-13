@@ -1,4 +1,7 @@
 /* Begin Bootstrap styling */
+footer hr {
+  border-top: 1px solid #eee;
+}
 
 /* End Bootstrap styling */
 
@@ -20,29 +23,29 @@ table, th, td {
 
 }
 
-body {
+/*body {
   background-color: rgba(255, 255, 153, 0.2);
   margin: auto;
-}
+}*/
 
-.content {
+/*.content {
   width: 40em;
   margin: auto;
   font-family: georgia;
   text-align: justify;
-}
+}*/
 
-a {
+/*a {
   color: red;
   font-weight: bold;
   text-decoration: none;
 }
+*/
 
 
-
-.tool {
+/*.tool {
   padding-top: 30px;
-}
+}*/
 
 
 /*header {
@@ -74,9 +77,7 @@ li a {
 }*/
 
 /* Footer */
-footer hr {
-  border-top: 1px solid #eee;
-}
+
 
 /*footer a {
   padding-top: 0.5em;
