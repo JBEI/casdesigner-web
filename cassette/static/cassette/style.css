@@ -1,3 +1,7 @@
+/* Begin Bootstrap styling */
+
+/* End Bootstrap styling */
+
 .reveal-if-active {
   opacity: 0;
   max-height: 0;
@@ -11,37 +15,76 @@
     padding: 10px 20px;
     transform: scale(1); }
 
-div {
-  width: 1000px;
-  word-wrap: break-word;
-}
-
 table, th, td {
     border: 1px solid black;
 
 }
 
 body {
-  background-color: rgba(255, 255, 153, 0.5);
+  background-color: rgba(255, 255, 153, 0.2);
+  margin: auto;
 }
 
 .content {
   width: 40em;
   margin: auto;
   font-family: georgia;
+  text-align: justify;
 }
 
 a {
   color: red;
+  font-weight: bold;
+  text-decoration: none;
 }
 
-a:visited {
-  color: black;
+
+
+.tool {
+  padding-top: 30px;
 }
 
-.author {
-  width: 10em;
-  margin: auto;
+header {
+  text-align: center;
+}
+
+/* Nav */
+.nav {
+  background-color: rgb(255, 255, 153);
+}
+
+ul {
+    list-style-type: none;
+    margin: auto;
+    width: 30em;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Footer */
+footer hr {
+  border-top: 1px solid #eee;
+}
+
+footer a {
+  padding-top: 0.5em;
+  float: right;
+}
+
+footer img {
+  float: left;
 }
 
 footer {
@@ -50,8 +93,8 @@ footer {
   text-align: center;
 }
 
-.tool {
-  padding-top: 30px;
+footer .text {
+  width: 40em;
+  margin: auto;
 }
-
 /*# sourceMappingURL=style.css.map */

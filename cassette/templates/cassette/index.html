@@ -1,8 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   {% load staticfiles %}
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>CASdesigner</title>
+    <link rel="stylesheet" href="{% static 'cassette/bootstrap.min.css'%}" />
+
     <link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
@@ -39,14 +51,35 @@
 
   <body>
 
-    <div class="content">
       <header>
 
+      <a href="/">
         <img alt="CASdesigner logo" src="{% static 'cassette/logo.png' %}" >
+      </a>
 
-        <p class="author">
-          by <a href="mailto:LeodEspaux@lbl.gov">Leo D'Espaux</a>
-        </p>
+        <div class="nav">
+          <ul>
+            <li>
+              <a href="https://github.com/JBEI/CASdesigner-web">Source code</a>
+            </li>
+
+            <li>
+              <a href="">Manual</a>
+            </li>
+
+            <li>
+              <a href="https://github.com/JBEI/casdesigner-web/blob/master/LICENSE">License</a>
+            </li>
+
+            <li>
+              <a href="https://github.com/JBEI/casdesigner-web/blob/master/COPYRIGHT">Legal information</a>
+            </li>
+          </ul>
+
+        </div>
+      </header>
+
+    <div class="content">
 
         <p>
           CASdesigner allows for semi-automated design of DNA for CRISPR/Cas9-mediated
@@ -63,10 +96,6 @@
           localization, stability, and solubility. Possible uses are to easily design
           primers to integration expression cassettes.
         </p>
-      </header>
-
-      <p>For a detailed user manual and feedback, please go to this <a href="https://docs.google.com/document/d/11YNoUBtit4rkWZQr_ZclzAOTE_HGMtgB3H_6cvq1Y24">google doc</a>. </p>
-
 
       <div class="tool">
         <p>What would you like to do with <emph>S. cerevisiae</emph> today?</p>
@@ -167,12 +196,17 @@
           </div>
         </form>
       </div> <!-- tool -->
-
-      <footer>
-        <hr>
-
-        <p> <a href="https://github.com/JBEI/CASdesigner-web">Source code</a> ~ <a href="https://github.com/JBEI/casdesigner-web/blob/master/LICENSE">License</a> ~ <a href="https://github.com/JBEI/casdesigner-web/blob/master/COPYRIGHT">Legal information</a></p>
-      </footer>
     </div><!-- content -->
+
+    <footer>
+      <hr>
+
+      <div class="text">
+        <img alt="DOE BRC logo" src="https://diva.jbei.org/img/footer/footer_1_doe_research.gif">
+        <img alt="LBNL logo" src="https://diva.jbei.org/img/footer/footer_2_lbl.gif">
+
+        <a href="">Submit an issue</a>
+      </div>
+    </footer>
   </body>
 </html>
