@@ -189,7 +189,7 @@ def editEmpty(name, sequence, cutname, promoter = None, terminator = None):
 		PromoterRec.id = PromoterRec.id + "ps"
 
 		TerminatorGeneRec = fetchGene(promoter)
-		TerminatorRec = fetchNeighbor(TerminatorGeneRec,"upstream",600)
+		TerminatorRec = fetchNeighbor(TerminatorGeneRec,"downstream",250)
 		TerminatorRec.id = TerminatorRec.id + "ts"
 
 		fragments = [UpHomRec, PromoterRec, orfRecord, TerminatorRec, DownHomRec]
