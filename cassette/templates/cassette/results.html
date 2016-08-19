@@ -1,9 +1,30 @@
-{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load staticfiles %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- the above must come first for bootstrap to work -->
 
-<h1>Assembly complete!</h1>
+  <title>CASdesigner - Results</title>
+  <link rel="stylesheet" href="{% static 'cassette/bootstrap.min.css'%}" />
+  <link rel="stylesheet" href="{% static 'cassette/bootstrap-theme.min.css'%}" />
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'cassette/style.css'%}" /> -->
 
-<div>
-{{ rendered|safe }}
-</div>
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <div class="alert alert-success" role="alert">
+    <strong>Assembly complete!</strong>
+    Check out the <a href="{% static 'cassette/casdesigner-manual.pdf' %}">manual</a> to learn how to interpret these results.
+  </div>
+  <div>
+  {{ rendered|safe }}
+  </div>
+</body>
+</html>
