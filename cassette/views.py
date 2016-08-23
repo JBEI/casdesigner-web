@@ -188,7 +188,7 @@ def editEmpty(name, sequence, cutname, promoter = None, terminator = None):
 		PromoterRec = fetchNeighbor(PromoterGeneRec,"upstream",600)
 		PromoterRec.id = PromoterRec.id + "ps"
 
-		TerminatorGeneRec = fetchGene(promoter)
+		TerminatorGeneRec = fetchGene(terminator)
 		TerminatorRec = fetchNeighbor(TerminatorGeneRec,"downstream",250)
 		TerminatorRec.id = TerminatorRec.id + "ts"
 
