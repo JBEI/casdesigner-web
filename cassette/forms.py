@@ -65,6 +65,10 @@ class ExistingLocusForm(forms.Form):
 							   label = 'Name of PROMOTER (e.g. TDH3): ')
 	terminator = forms.CharField(max_length = 100,
 								 label = 'Name of TERMINATOR (e.g. ADH1): ')
+	Ntag = forms.CharField(max_length = 1000000,
+							label = 'What N-terminal tag do you want to use: ')
+	Ctag = forms.CharField(max_length = 1000000,
+							label = 'What C-terminal tag do you want to use: ')
 
 class TrueIndexForm(forms.Form):
 	# Initial Choice
@@ -104,6 +108,10 @@ class TrueIndexForm(forms.Form):
 						   label = 'What is the name of your custom gene (e.g. K1GapDH)?: ')
 	orfSeq1 = forms.CharField(max_length = 1000000, 
 							 label = 'What is the sequence of the ORF?: ')
+	Ntag1 = forms.CharField(max_length = 1000000,
+								label = 'What N-terminal tag do you want to use: ')
+	Ctag1 = forms.CharField(max_length = 1000000,
+								label = 'What C-terminal tag do you want to use: ')
 
 	# Choosing 0.2
 	locus = forms.CharField(max_length = 100,
@@ -138,6 +146,10 @@ class TrueIndexForm(forms.Form):
 						   label = 'What is the name of your custom gene (e.g. K1GapDH)?: ')
 	orfSeq2 = forms.CharField(max_length = 1000000, 
 							 label = 'What is the sequence of the ORF?: ')
+	Ntag2 = forms.CharField(max_length = 1000000,
+								label = 'What N-terminal tag do you want to use: ')
+	Ctag2 = forms.CharField(max_length = 1000000,
+								label = 'What C-terminal tag do you want to use: ')
 
 	# Choosing 2.4 (NOT IMPLEMENTED)
 

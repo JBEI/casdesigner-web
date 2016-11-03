@@ -54,8 +54,9 @@ def index(request):
 				orfSeq = request.POST['orfSeq1']
 				promoterName = request.POST['promoterName1']
 				terminatorName = request.POST['terminatorName1']
-
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(orfName, orfSeq, cutsite, promoterName, terminatorName)
+				Ntag = request.POST['Ntag1']
+				Ctag = request.POST['Ctag1']
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(orfName, orfSeq, cutsite, promoterName, terminatorName, Ntag, Ctag)
 
 			request.session['Lup'] = Lup
 			request.session['Rup'] = Rup
@@ -83,7 +84,9 @@ def index(request):
 				terminatorName = request.POST['terminatorName2']
 				orfName = request.POST['orfName2']
 				orfSeq = request.POST['orfSeq2']
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editExisting(locus, 3, promoter=promoterName,terminator=terminatorName,NewGeneName=orfName,NewGeneSeq=orfSeq)
+				Ntag = request.POST['Ntag2']
+				Ctag = request.POST['Ctag2']
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editExisting(locus, 3, promoter=promoterName,terminator=terminatorName,NewGeneName=orfName,NewGeneSeq=orfSeq, Ntag=Ntag, Ctag=Ctag)
 
 			elif choice2 == "4":
 				pass
@@ -430,6 +433,7 @@ def stitch(fragments, deletion=False):
 	rendered = rendered + "</pre>"
 
 	return str(Lup), str(Rup), str(Ldown), str(Rdown), str(L), str(R), "Sequence Length: " + str(sequenceLength), "Sequence: " + str(donorSequence), str(rendered)
+
 
 # Modified functions for input
 def standardCassette(PromoterName,TerminatorName, orfName, orfSeq):
