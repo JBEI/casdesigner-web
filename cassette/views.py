@@ -151,7 +151,67 @@ def customResults(request):
 
 
 #---------------  Helper Functions  ---------------------#
-def editEmpty(name, sequence, cutname, promoter = None, terminator = None):
+def processTags (nTerminalTags, cTerminalTags):
+	def validTags():
+		tagFrame = pd.read_excel("ProteinTags.xlsx")
+		return tagFrame["tagName"].tolist()
+
+	def tagFinder(tagName):
+		tagFrame = pd.read_excel("ProteinTags.xlsx", index_col="tagName")
+
+		sequence = tagFrame.loc[tagName, 'sequence']
+
+		return sequence
+	def makeTags(text):
+		if text in validTags():
+			return SeqRecord(Seq(tagFinder(text)), name=text + "tag")
+		else:
+			n, s = text.split()
+			return SeqRecord(Seq(s), name=n + "tag")
+
+	nTerminalTags = nTerminalTags.split(',')
+	nTerminalTags = list(filter(None, map(lambda x: x.strip(), nTerminalTags)))
+	cTerminalTags = cTerminalTags.split(',')
+	cTerminalTags = list(filter(None, map(lambda x: x.strip(), cTerminalTags)))
+	return nTerminalTags, cTerminalTags
+
+def moveCodons (orfSeq, orfName, nTerminalTags, cTerminalTags):
+	def removeStartCodon(CDS):
+		# this alternate method would be useful for error handling
+		#         i = CDS.find('ATG')
+		#         return (CDS[:i], CDS[:i])
+		return (CDS[:3], CDS[3:])
+
+	def removeStopCodon(CDS):
+		#this alternate method would be useful for error handling
+		#         stops = ['TAG', 'TAA', 'TAG']
+		#         for codon in stops:
+		#             i = CDS.rfind(codon)
+		#             print(i)
+		#             if i != -1:
+		#                 return (CDS[:i], CDS[:i])
+		l = len(CDS)
+		return (CDS[:l - 3], CDS[l - 3:])
+	nTerminals = len(nTerminalTags)
+	cTerminals = len(cTerminalTags)
+
+	if nTerminals > 0:
+		nTerminalTags = list(map(makeTags, nTerminalTags))
+		start, orfSeq = removeStartCodon(orfSeq)
+		nTerminalTags[0] = start + nTerminalTags[0]
+	if cTerminals > 0:
+		cTerminalTags = list(map(makeTags, cTerminalTags))
+		orfSeq, stop = removeStopCodon(orfSeq)
+		cTerminalTags[cTerminals - 1] += stop
+	areNTags = [i + 1 for i in range(nTerminals)]
+	areCTags = [i + 2 + nTerminals for i in range(cTerminals)]
+
+	orfRecord = SeqRecord(Seq(orfSeq), name=orfName)
+
+	return (nTerminalTags + [orfRecord] + cTerminalTags, areNTags, areCTags)
+
+
+def editEmpty(name: object, sequence: object, cutname: object, promoter: object = None, terminator: object = None, Ntag = [], Ctag = []) -> object:
 	df = pd.read_excel(os.path.join(PROJECT_ROOT, "cutsites.xlsx"))
 
 	labels=df['name'].values
@@ -182,10 +242,16 @@ def editEmpty(name, sequence, cutname, promoter = None, terminator = None):
 
 	UpHomRec = SeqRecord(UpSeq, id=cutname)
 	DownHomRec = SeqRecord(DownSeq, id=cutname)
+	Ntag, Ctag = processTags(Ntag, Ctag)
+	if len(Ntag)>0 or len(Ctag)>0:
+		orfRecords = moveCodons(sequence, name, Ntag, Ctag)
+	else:
+		orfRecords = [SeqRecord(Seq(sequence, SingleLetterAlphabet()), id=name)]
+		areNTags = []
+		areCTags = []
 
-	orfRecord = SeqRecord(Seq(sequence, SingleLetterAlphabet()), id=name)
 	if promoter is None:
-		fragments = [UpHomRec, orfRecord, DownHomRec]
+		fragments = [UpHomRec] + orfRecords + [DownHomRec]
 	else:
 		PromoterGeneRec = fetchGene(promoter)
 		PromoterRec = fetchNeighbor(PromoterGeneRec,"upstream",600)
@@ -195,10 +261,13 @@ def editEmpty(name, sequence, cutname, promoter = None, terminator = None):
 		TerminatorRec = fetchNeighbor(TerminatorGeneRec,"downstream",250)
 		TerminatorRec.id = TerminatorRec.id + "ts"
 
-		fragments = [UpHomRec, PromoterRec, orfRecord, TerminatorRec, DownHomRec]
-	return stitch(fragments)
+		fragments = [UpHomRec, PromoterRec] + orfRecords [TerminatorRec, DownHomRec]
+		areNTags = list(map(lambda x: x + 2, areNTags))
+		areCTags = list(map(lambda x: x + 2, areCTags))
+		# JPNTODO the build cassette function should be used for when building a cassette...
+	return stitch(fragments, areNTags, areCTags)
 
-def editExisting(name, option, promoter = None, terminator = None, NewGeneName = "", NewGeneSeq = ""):
+def editExisting(name, option, promoter = None, terminator = None, NewGeneName = "", NewGeneSeq = "", Ntag=[], Ctag=[]):
 	OrigGeneRecord = fetchGene(name)
 	UpHomRec = fetchNeighbor(OrigGeneRecord, "upstream", HomologyLength)
 	DownHomRec = fetchNeighbor(OrigGeneRecord, "downstream", HomologyLength)
@@ -212,13 +281,23 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 		fragments = [UpHomRec, InsertRec, DownHomRec]
 	elif option == 3:
 		PromoterRec, orfRecord, TerminatorRec = standardCassette(promoter, terminator, NewGeneName, NewGeneSeq)
-		fragments = [UpHomRec, PromoterRec, orfRecord, TerminatorRec, DownHomRec]
+		Ntag, Ctag = processTags(Ntag, Ctag)
+		if len(Ntag) > 0 or len(Ctag) > 0:
+			orfRecords, areNTags, areCTags = moveCodons(NewGeneSeq, NewGeneName, Ntag, Ctag)
+		else:
+			areNTags = []
+			areCTags = []
+			orfRecords = [orfRecord]
+		fragments = [UpHomRec, PromoterRec] + orfRecords + [TerminatorRec, DownHomRec]
+		areNTags = list(map(lambda x: x + 2, areNTags))
+		areCTags = list(map(lambda x: x + 2, areCTags))
+		#JPNTODO the build cassete function should be actually used... and take tags into account
 	elif option == 4:
 		pass
 	elif option == 5:
 		pass
 
-	return stitch(fragments, deletion=cleanDeletion)
+	return stitch(fragments, areNtags, areCTags, deletion=cleanDeletion)
 
 def fetchGene(GeneName):
 
@@ -336,14 +415,14 @@ def getPrimer(currRecord):
 
 	seq=currRecord.seq
 
-	while mp <= PrimerMaxTm and length <= PrimerMaxLen:
+	while mp <= PrimerMaxTm and length < PrimerMaxLen:
 		primer = primer + seq[length]
 		mp = MeltingTemp.Tm_staluc(primer)
 		length += 1
 
 	return primer
 
-def overhangPrimer(currRecord,prevSeq):
+def overhangPrimer(currRecord,prevSeq, linker = ""):
 	#let's get the template-binding primer first
 	primer=getPrimer(currRecord)
 
@@ -358,11 +437,13 @@ def overhangPrimer(currRecord,prevSeq):
 
 	#the index must be an integer!!!
 	maxOhLen=int(maxOhLen)
-	ohprimer=prevSeq.seq[-maxOhLen:]+primer #we add the .seq so that it returns a string
+	ohprimer=prevSeq.seq[-maxOhLen:] + linker + primer #we add the .seq so that it returns a string
 
 	return ohprimer
 
-def stitch(fragments, deletion=False):
+def stitch(fragments, areNTags = [], areCTags = [], deletion=False):
+	nLinker = Seq("GGAGGTGGTGGAGGTGGA")
+	cLinker = Seq("GGTAGCGGTAGCGGCAGC")
 	#this function takes seq records and prints primers
 
 	#let's make an empty sequence file
@@ -370,8 +451,16 @@ def stitch(fragments, deletion=False):
 	donor=Seq("")
 	index=[]
 	print("")
-	for i in range (0, Nfrags):
-		donor=donor+fragments[i]
+	for i in range(0, Nfrags):
+		if i in areCTags:
+			# add the linker before bin
+			#JPNTODO check that this annotates the linkers correctly in GB output
+			donor += SeqRecord(cLinker, name="cLinker")
+		donor = donor + fragments[i]
+		if i in areNTags:
+			# add linker after bin
+			# JPNTODO check that this annotates the linkers correctly in GB output
+			donor += SeqRecord(nLinker, name="nLinker")
 	# Dummy assignment setup to allow for compilation
 	Lup = ""
 	Rup = ""
@@ -380,18 +469,55 @@ def stitch(fragments, deletion=False):
 	L = ""
 	R = ""
 
+	start = Seq("")
+	stop = Seq("")
+	# JPNTODO oh my god this needs some work, I put my stuff into both loops since the first is returned (to where???)
+	# and the second one seems to make the page output
+
 	# I'm not sure what this loop does (don't confuse it with the other in this method. If you can
 	# factor it out, be my guest.
 	for i in range (0, Nfrags):
+		FLinker = ""
+		RLinker = ""
+		# this section treats the start and stop codons as linkers that need to be primer-introduced if tags are used
+		if i + 1 in areNTags and i not in areNTags:
+			# add start codon to reverse primer
+			start = fragments[i + 1][:3].seq
+			fragments[i + 1] = fragments[i + 1][3:]
+			RLinker = start.reverse_complement()
+		if i in areNTags and i - 1 not in areNTags:
+			# add start codon to forward primer
+			FLinker = start
+		if i in areCTags and i + 1 not in areCTags:
+			# add a stop codon to the reverse primer
+			l = len(fragments[i])
+			stop = fragments[i][l - 3:].seq
+			fragments[i] = fragments[i][:l - 3]
+			RLinker = stop.reverse_complement()
+		if i - 1 in areCTags and i not in areCTags:
+			FLinker = stop
+		# this section introduces the protein linkers for tags
+		if i in areNTags:
+			# reverse primer will need a liniker
+			RLinker = nLinker.reverse_complement()
+		if i - 1 in areNTags:
+			# forward primer will need a linker
+			FLinker = nLinker
+		if i + 1 in areCTags:
+			# reverse primer will need a linker
+			RLinker = cLinker.reverse_complement()
+		if i in areCTags:
+			# forward primer will need a linker
+			FLinker = cLinker
 		if i==0:
 			Lup = "Lup"+ fragments[i].id + " " + getPrimer(donor)
-			Rup = "Rup"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+			Rup = "Rup"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement(), RLinker)
 		elif i==Nfrags-1:
-			Ldown = "Ldown"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1])
+			Ldown = "Ldown"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1], FLinker)
 			Rdown = "Rdown"+ fragments[i].id + " " + getPrimer(donor.reverse_complement())
 		else:
-			L = "L"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1])
-			R = "R"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement())
+			L = "L"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1], FLinker)
+			R = "R"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement(), RLinker)
 
 	sequenceLength = len(donor.seq)
 	donorSequence = donor.seq
@@ -400,10 +526,44 @@ def stitch(fragments, deletion=False):
 	rendered = "<pre>"
 
 	rendered = rendered +"Here are the primers to amplify your fragments and construct your donor DNA cassette:\n\n"
-
+	start = Seq("")
+	stop = Seq("")
 	# The names include information on the homology provided by the overhang
 	# Note that some primers don't have overhangs
 	for i in range (0, Nfrags):
+		FLinker = ""
+		RLinker = ""
+		# this section treats the start and stop codons as linkers that need to be primer-introduced if tags are used
+		if i + 1 in areNTags and i not in areNTags:
+			# add start codon to reverse primer
+			start = fragments[i + 1][:3].seq
+			fragments[i + 1] = fragments[i + 1][3:]
+			RLinker = start.reverse_complement()
+		if i in areNTags and i - 1 not in areNTags:
+			# add start codon to forward primer
+			FLinker = start
+		if i in areCTags and i + 1 not in areCTags:
+			# add a stop codon to the reverse primer
+			l = len(fragments[i])
+			stop = fragments[i][l - 3:].seq
+			fragments[i] = fragments[i][:l - 3]
+			RLinker = stop.reverse_complement()
+		if i - 1 in areCTags and i not in areCTags:
+			FLinker = stop
+		# this section introduces the protein linkers for tags
+		if i in areNTags:
+			# reverse primer will need a liniker
+			RLinker = nLinker.reverse_complement()
+		if i - 1 in areNTags:
+			# forward primer will need a linker
+			FLinker = nLinker
+		if i + 1 in areCTags:
+			# reverse primer will need a linker
+			RLinker = cLinker.reverse_complement()
+		if i in areCTags:
+			# forward primer will need a linker
+			FLinker = cLinker
+
 		if i==0:
 			if deletion:
 					rightFragmentId = "del"
@@ -411,18 +571,18 @@ def stitch(fragments, deletion=False):
 				rightFragmentId = fragments[i+1].id
 
 			rendered = rendered +"F-up"+ fragments[i].id + " " + getPrimer(donor) + "\n"
-			rendered = rendered +"R-up"+ fragments[i].id + "(" + rightFragmentId + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n"
+			rendered = rendered +"R-up"+ fragments[i].id + "(" + rightFragmentId + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement(), RLinker) + "\n"
 		elif i==Nfrags-1:
 			if deletion:
 					leftFragmentId = "del"
 			else:
 				leftFragmentId = fragments[i-1].id
 
-			rendered = rendered +"F-dn"+ fragments[i].id + "(" + leftFragmentId + ") " + overhangPrimer(fragments[i],fragments[i-1]) + "\n"
+			rendered = rendered +"F-dn"+ fragments[i].id + "(" + leftFragmentId + ") " + overhangPrimer(fragments[i],fragments[i-1], FLinker) + "\n"
 			rendered = rendered +"R-dn"+ fragments[i].id + " " + getPrimer(donor.reverse_complement()) + "\n"
 		else:
-			rendered = rendered +"F-"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1]) + "\n"
-			rendered = rendered +"R-"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement()) + "\n"
+			rendered = rendered +"F-"+ fragments[i].id + "(" + fragments[i-1].id + ") " + overhangPrimer(fragments[i],fragments[i-1], FLinker) + "\n"
+			rendered = rendered +"R-"+ fragments[i].id + "(" + fragments[i+1].id + ") " + overhangPrimer(fragments[i].reverse_complement(),fragments[i+1].reverse_complement(), RLinker) + "\n"
 
 	rendered = rendered +"\n\nThe size and sequence of your donor DNA is below.\n\n"
 
