@@ -54,9 +54,9 @@ def index(request):
 				orfSeq = request.POST['orfSeq1']
 				promoterName = request.POST['promoterName1']
 				terminatorName = request.POST['terminatorName1']
-				Ntag = request.POST['Ntag1']
-				Ctag = request.POST['Ctag1']
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(orfName, orfSeq, cutsite, promoterName, terminatorName, Ntag, Ctag)
+				NtagName = request.POST['NtagName1']
+				CtagName = request.POST['CtagName1']
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editEmpty(orfName, orfSeq, cutsite, promoterName, terminatorName, NtagName, CtagName)
 
 			request.session['Lup'] = Lup
 			request.session['Rup'] = Rup
@@ -84,9 +84,9 @@ def index(request):
 				terminatorName = request.POST['terminatorName2']
 				orfName = request.POST['orfName2']
 				orfSeq = request.POST['orfSeq2']
-				Ntag = request.POST['Ntag2']
-				Ctag = request.POST['Ctag2']
-				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editExisting(locus, 3, promoter=promoterName,terminator=terminatorName,NewGeneName=orfName,NewGeneSeq=orfSeq, Ntag=Ntag, Ctag=Ctag)
+				NtagName = request.POST['NtagName2']
+				CtagName = request.POST['CtagName2']
+				Lup, Rup, Ldown, Rdown, L, R, seqLen, donorSeq, rendered = editExisting(locus, 3, promoter=promoterName,terminator=terminatorName,NewGeneName=orfName,NewGeneSeq=orfSeq, Ntag=NtagName, Ctag=CtagName)
 
 			elif choice2 == "4":
 				pass
@@ -152,6 +152,13 @@ def customResults(request):
 
 #---------------  Helper Functions  ---------------------#
 def processTags (nTerminalTags, cTerminalTags):
+	nTerminalTags = nTerminalTags.split(',')
+	nTerminalTags = list(filter(None, map(lambda x: x.strip(), nTerminalTags)))
+	cTerminalTags = cTerminalTags.split(',')
+	cTerminalTags = list(filter(None, map(lambda x: x.strip(), cTerminalTags)))
+	return nTerminalTags, cTerminalTags
+
+def makeTags(text):
 	def validTags():
 		tagFrame = pd.read_excel("ProteinTags.xlsx")
 		return tagFrame["tagName"].tolist()
@@ -162,18 +169,13 @@ def processTags (nTerminalTags, cTerminalTags):
 		sequence = tagFrame.loc[tagName, 'sequence']
 
 		return sequence
-	def makeTags(text):
-		if text in validTags():
-			return SeqRecord(Seq(tagFinder(text)), name=text + "tag")
-		else:
-			n, s = text.split()
-			return SeqRecord(Seq(s), name=n + "tag")
 
-	nTerminalTags = nTerminalTags.split(',')
-	nTerminalTags = list(filter(None, map(lambda x: x.strip(), nTerminalTags)))
-	cTerminalTags = cTerminalTags.split(',')
-	cTerminalTags = list(filter(None, map(lambda x: x.strip(), cTerminalTags)))
-	return nTerminalTags, cTerminalTags
+	if text in validTags():
+		return SeqRecord(Seq(tagFinder(text)), name=text + "tag")
+	else:
+		n, s = text.split()
+		return SeqRecord(Seq(s), name=n + "tag")
+
 
 def moveCodons (orfSeq, orfName, nTerminalTags, cTerminalTags):
 	def removeStartCodon(CDS):
@@ -211,7 +213,7 @@ def moveCodons (orfSeq, orfName, nTerminalTags, cTerminalTags):
 	return (nTerminalTags + [orfRecord] + cTerminalTags, areNTags, areCTags)
 
 
-def editEmpty(name: object, sequence: object, cutname: object, promoter: object = None, terminator: object = None, Ntag = [], Ctag = []) -> object:
+def editEmpty(name: object, sequence: object, cutname: object, promoter: object = None, terminator: object = None, Ntag = "", Ctag = "") -> object:
 	df = pd.read_excel(os.path.join(PROJECT_ROOT, "cutsites.xlsx"))
 
 	labels=df['name'].values
@@ -244,7 +246,7 @@ def editEmpty(name: object, sequence: object, cutname: object, promoter: object 
 	DownHomRec = SeqRecord(DownSeq, id=cutname)
 	Ntag, Ctag = processTags(Ntag, Ctag)
 	if len(Ntag)>0 or len(Ctag)>0:
-		orfRecords = moveCodons(sequence, name, Ntag, Ctag)
+		orfRecords, areNTags, areCTags  = moveCodons(sequence, name, Ntag, Ctag)
 	else:
 		orfRecords = [SeqRecord(Seq(sequence, SingleLetterAlphabet()), id=name)]
 		areNTags = []
@@ -261,13 +263,13 @@ def editEmpty(name: object, sequence: object, cutname: object, promoter: object 
 		TerminatorRec = fetchNeighbor(TerminatorGeneRec,"downstream",250)
 		TerminatorRec.id = TerminatorRec.id + "ts"
 
-		fragments = [UpHomRec, PromoterRec] + orfRecords [TerminatorRec, DownHomRec]
+		fragments = [UpHomRec, PromoterRec] + orfRecords + [TerminatorRec, DownHomRec]
 		areNTags = list(map(lambda x: x + 2, areNTags))
 		areCTags = list(map(lambda x: x + 2, areCTags))
 		# JPNTODO the build cassette function should be used for when building a cassette...
 	return stitch(fragments, areNTags, areCTags)
 
-def editExisting(name, option, promoter = None, terminator = None, NewGeneName = "", NewGeneSeq = "", Ntag=[], Ctag=[]):
+def editExisting(name, option, promoter = None, terminator = None, NewGeneName = "", NewGeneSeq = "", Ntag="", Ctag=""):
 	OrigGeneRecord = fetchGene(name)
 	UpHomRec = fetchNeighbor(OrigGeneRecord, "upstream", HomologyLength)
 	DownHomRec = fetchNeighbor(OrigGeneRecord, "downstream", HomologyLength)

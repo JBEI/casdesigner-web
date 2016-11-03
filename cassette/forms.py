@@ -101,17 +101,17 @@ class TrueIndexForm(forms.Form):
 
 	# Choosing 1.2
 	promoterName1 = forms.CharField(max_length = 100,
-								   label = 'Which PROMOTER would you like to use (e.g. TDH3)?: ')
+										label = 'Which PROMOTER would you like to use (e.g. TDH3)?: ')
 	terminatorName1 = forms.CharField(max_length = 100,
-									 label = 'Which TERMINATOR would you like to use (e.g. ADH1)?: ')
+										label = 'Which TERMINATOR would you like to use (e.g. ADH1)?: ')
 	orfName1 = forms.CharField(max_length = 100, 
-						   label = 'What is the name of your custom gene (e.g. K1GapDH)?: ')
+										label = 'What is the name of your custom gene (e.g. K1GapDH)?: ')
 	orfSeq1 = forms.CharField(max_length = 1000000, 
-							 label = 'What is the sequence of the ORF?: ')
-	Ntag1 = forms.CharField(max_length = 1000000,
-								label = 'What N-terminal tag do you want to use: ')
-	Ctag1 = forms.CharField(max_length = 1000000,
-								label = 'What C-terminal tag do you want to use: ')
+										label = 'What is the sequence of the ORF?: ')
+	NtagName1 = forms.CharField(max_length = 1000000,
+										label = 'What N-terminal tag do you want to use: ')
+	CtagName1 = forms.CharField(max_length = 1000000,
+										label = 'What C-terminal tag do you want to use: ')
 
 	# Choosing 0.2
 	locus = forms.CharField(max_length = 100,
@@ -139,17 +139,17 @@ class TrueIndexForm(forms.Form):
 
 	# Choosing 2.3
 	promoterName2 = forms.CharField(max_length = 100,
-								   label = 'Which PROMOTER would you like to use (e.g. TDH3)?: ')
+										label = 'Which PROMOTER would you like to use (e.g. TDH3)?: ')
 	terminatorName2 = forms.CharField(max_length = 100,
-									 label = 'Which TERMINATOR would you like to use (e.g. ADH1)?: ')
+										label = 'Which TERMINATOR would you like to use (e.g. ADH1)?: ')
 	orfName2 = forms.CharField(max_length = 100, 
-						   label = 'What is the name of your custom gene (e.g. K1GapDH)?: ')
+										label = 'What is the name of your custom gene (e.g. K1GapDH)?: ')
 	orfSeq2 = forms.CharField(max_length = 1000000, 
-							 label = 'What is the sequence of the ORF?: ')
-	Ntag2 = forms.CharField(max_length = 1000000,
-								label = 'What N-terminal tag do you want to use: ')
-	Ctag2 = forms.CharField(max_length = 1000000,
-								label = 'What C-terminal tag do you want to use: ')
+										label = 'What is the sequence of the ORF?: ')
+	NtagName2 = forms.CharField(max_length = 1000000,
+										label = 'What N-terminal tag do you want to use: ')
+	CtagName2 = forms.CharField(max_length = 1000000,
+										label = 'What C-terminal tag do you want to use: ')
 
 	# Choosing 2.4 (NOT IMPLEMENTED)
 

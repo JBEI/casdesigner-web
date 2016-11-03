@@ -2,3 +2,5 @@ db.sqlite3
 synbiocad/site-packages
 .vagrant
 __pycache__
+Icon
+.DS_Store
