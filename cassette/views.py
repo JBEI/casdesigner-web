@@ -469,8 +469,6 @@ def stitch(fragments, areNTags = [], areCTags = [], deletion=False):
 	L = ""
 	R = ""
 
-	start = Seq("")
-	stop = Seq("")
 	# JPNTODO oh my god this needs some work, I put my stuff into both loops since the first is returned (to where???)
 	# and the second one seems to make the page output
 
@@ -479,23 +477,6 @@ def stitch(fragments, areNTags = [], areCTags = [], deletion=False):
 	for i in range (0, Nfrags):
 		FLinker = ""
 		RLinker = ""
-		# this section treats the start and stop codons as linkers that need to be primer-introduced if tags are used
-		if i + 1 in areNTags and i not in areNTags:
-			# add start codon to reverse primer
-			start = fragments[i + 1][:3].seq
-			fragments[i + 1] = fragments[i + 1][3:]
-			RLinker = start.reverse_complement()
-		if i in areNTags and i - 1 not in areNTags:
-			# add start codon to forward primer
-			FLinker = start
-		if i in areCTags and i + 1 not in areCTags:
-			# add a stop codon to the reverse primer
-			l = len(fragments[i])
-			stop = fragments[i][l - 3:].seq
-			fragments[i] = fragments[i][:l - 3]
-			RLinker = stop.reverse_complement()
-		if i - 1 in areCTags and i not in areCTags:
-			FLinker = stop
 		# this section introduces the protein linkers for tags
 		if i in areNTags:
 			# reverse primer will need a liniker
@@ -526,30 +507,11 @@ def stitch(fragments, areNTags = [], areCTags = [], deletion=False):
 	rendered = "<pre>"
 
 	rendered = rendered +"Here are the primers to amplify your fragments and construct your donor DNA cassette:\n\n"
-	start = Seq("")
-	stop = Seq("")
 	# The names include information on the homology provided by the overhang
 	# Note that some primers don't have overhangs
 	for i in range (0, Nfrags):
 		FLinker = ""
 		RLinker = ""
-		# this section treats the start and stop codons as linkers that need to be primer-introduced if tags are used
-		if i + 1 in areNTags and i not in areNTags:
-			# add start codon to reverse primer
-			start = fragments[i + 1][:3].seq
-			fragments[i + 1] = fragments[i + 1][3:]
-			RLinker = start.reverse_complement()
-		if i in areNTags and i - 1 not in areNTags:
-			# add start codon to forward primer
-			FLinker = start
-		if i in areCTags and i + 1 not in areCTags:
-			# add a stop codon to the reverse primer
-			l = len(fragments[i])
-			stop = fragments[i][l - 3:].seq
-			fragments[i] = fragments[i][:l - 3]
-			RLinker = stop.reverse_complement()
-		if i - 1 in areCTags and i not in areCTags:
-			FLinker = stop
 		# this section introduces the protein linkers for tags
 		if i in areNTags:
 			# reverse primer will need a liniker
