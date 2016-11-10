@@ -171,10 +171,10 @@ def makeTags(text):
 		return sequence
 
 	if text in validTags():
-		return SeqRecord(Seq(tagFinder(text)), name=text + "tag")
+		return SeqRecord(Seq(tagFinder(text)), id=text + "tag")
 	else:
 		n, s = text.split()
-		return SeqRecord(Seq(s), name=n + "tag")
+		return SeqRecord(Seq(s), id=n + "tag")
 
 
 def moveCodons (orfSeq, orfName, nTerminalTags, cTerminalTags):
@@ -182,7 +182,7 @@ def moveCodons (orfSeq, orfName, nTerminalTags, cTerminalTags):
 		# this alternate method would be useful for error handling
 		#         i = CDS.find('ATG')
 		#         return (CDS[:i], CDS[:i])
-		return (CDS[:3], CDS[3:])
+		return CDS[:3], CDS[3:]
 
 	def removeStopCodon(CDS):
 		#this alternate method would be useful for error handling
@@ -193,7 +193,7 @@ def moveCodons (orfSeq, orfName, nTerminalTags, cTerminalTags):
 		#             if i != -1:
 		#                 return (CDS[:i], CDS[:i])
 		l = len(CDS)
-		return (CDS[:l - 3], CDS[l - 3:])
+		return CDS[:l - 3], CDS[l - 3:]
 	nTerminals = len(nTerminalTags)
 	cTerminals = len(cTerminalTags)
 
@@ -208,10 +208,9 @@ def moveCodons (orfSeq, orfName, nTerminalTags, cTerminalTags):
 	areNTags = [i + 1 for i in range(nTerminals)]
 	areCTags = [i + 2 + nTerminals for i in range(cTerminals)]
 
-	orfRecord = SeqRecord(Seq(orfSeq), name=orfName)
+	orfRecord = SeqRecord(Seq(orfSeq), id=orfName)
 
-	return (nTerminalTags + [orfRecord] + cTerminalTags, areNTags, areCTags)
-
+	return nTerminalTags + [orfRecord] + cTerminalTags, areNTags, areCTags
 
 def editEmpty(name: object, sequence: object, cutname: object, promoter: object = None, terminator: object = None, Ntag = "", Ctag = "") -> object:
 	df = pd.read_excel(os.path.join(PROJECT_ROOT, "cutsites.xlsx"))
@@ -274,7 +273,8 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 	UpHomRec = fetchNeighbor(OrigGeneRecord, "upstream", HomologyLength)
 	DownHomRec = fetchNeighbor(OrigGeneRecord, "downstream", HomologyLength)
 	cleanDeletion = False
-
+	areNTags = []
+	areCTags = []
 	if option == 1:
 		fragments = [UpHomRec, DownHomRec]
 		cleanDeletion = True
@@ -287,8 +287,6 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 		if len(Ntag) > 0 or len(Ctag) > 0:
 			orfRecords, areNTags, areCTags = moveCodons(NewGeneSeq, NewGeneName, Ntag, Ctag)
 		else:
-			areNTags = []
-			areCTags = []
 			orfRecords = [orfRecord]
 		fragments = [UpHomRec, PromoterRec] + orfRecords + [TerminatorRec, DownHomRec]
 		areNTags = list(map(lambda x: x + 2, areNTags))
@@ -299,7 +297,7 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 	elif option == 5:
 		pass
 
-	return stitch(fragments, areNtags, areCTags, deletion=cleanDeletion)
+	return stitch(fragments, areNTags, areCTags, deletion=cleanDeletion)
 
 def fetchGene(GeneName):
 
@@ -314,7 +312,6 @@ def fetchGene(GeneName):
 	# and it returns information about the gene you want
 	count=0
 	for row in rows:
-
 		count=count+1
 		if count==1:
 			descr= row["description"]
@@ -440,7 +437,8 @@ def overhangPrimer(currRecord,prevSeq, linker = ""):
 	#the index must be an integer!!!
 	maxOhLen=int(maxOhLen)
 	ohprimer=prevSeq.seq[-maxOhLen:] + linker + primer #we add the .seq so that it returns a string
-
+	if len(ohprimer):
+		ohprimer = ohprimer[-60:]
 	return ohprimer
 
 def stitch(fragments, areNTags = [], areCTags = [], deletion=False):
@@ -457,12 +455,12 @@ def stitch(fragments, areNTags = [], areCTags = [], deletion=False):
 		if i in areCTags:
 			# add the linker before bin
 			#JPNTODO check that this annotates the linkers correctly in GB output
-			donor += SeqRecord(cLinker, name="cLinker")
+			donor += SeqRecord(cLinker, id="cLinker")
 		donor = donor + fragments[i]
 		if i in areNTags:
 			# add linker after bin
 			# JPNTODO check that this annotates the linkers correctly in GB output
-			donor += SeqRecord(nLinker, name="nLinker")
+			donor += SeqRecord(nLinker, id="nLinker")
 	# Dummy assignment setup to allow for compilation
 	Lup = ""
 	Rup = ""
