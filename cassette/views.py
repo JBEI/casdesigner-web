@@ -160,11 +160,11 @@ def processTags (nTerminalTags, cTerminalTags):
 
 def makeTags(text):
 	def validTags():
-		tagFrame = pd.read_excel("ProteinTags.xlsx")
+		tagFrame = pd.read_excel("/usr/local/casdesigner/ProteinTags.xlsx")
 		return tagFrame["tagName"].tolist()
 
 	def tagFinder(tagName):
-		tagFrame = pd.read_excel("ProteinTags.xlsx", index_col="tagName")
+		tagFrame = pd.read_excel("/usr/local/casdesigner/ProteinTags.xlsx", index_col="tagName")
 
 		sequence = tagFrame.loc[tagName, 'sequence']
 
