@@ -263,8 +263,8 @@ def editEmpty(name: object, sequence: object, cutname: object, promoter: object 
 		TerminatorRec.id = TerminatorRec.id + "ts"
 
 		fragments = [UpHomRec, PromoterRec] + orfRecords + [TerminatorRec, DownHomRec]
-		areNTags = list(map(lambda x: x + 2, areNTags))
-		areCTags = list(map(lambda x: x + 2, areCTags))
+		areNTags = list(map(lambda x: x + 1, areNTags))
+		areCTags = list(map(lambda x: x + 1, areCTags))
 		# JPNTODO the build cassette function should be used for when building a cassette...
 	return stitch(fragments, areNTags, areCTags)
 
@@ -289,8 +289,8 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 		else:
 			orfRecords = [orfRecord]
 		fragments = [UpHomRec, PromoterRec] + orfRecords + [TerminatorRec, DownHomRec]
-		areNTags = list(map(lambda x: x + 2, areNTags))
-		areCTags = list(map(lambda x: x + 2, areCTags))
+		areNTags = list(map(lambda x: x + 1, areNTags))
+		areCTags = list(map(lambda x: x + 1, areCTags))
 		#JPNTODO the build cassete function should be actually used... and take tags into account
 	elif option == 4:
 		pass
