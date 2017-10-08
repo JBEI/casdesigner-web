@@ -24,6 +24,8 @@ import pandas as pd #this is how I usually import pandas
 import matplotlib.pyplot as plt
 import numpy as np
 from textwrap import fill
+from pygenome import sg
+
 
 # define global variables
 HomologyLength = 1000
@@ -301,43 +303,16 @@ def editExisting(name, option, promoter = None, terminator = None, NewGeneName =
 
 def fetchGene(GeneName):
 
-	service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
-	template = service.get_template('Gene_GenomicDNA')
-
-	rows = template.rows(
-		E = {"op": "LOOKUP", "value": GeneName, "extra_value": "S. cerevisiae"}
-	)
-
-	# this service seems to return multiple similar genes but we want the first one only, so count
-	# and it returns information about the gene you want
-	count=0
-	for row in rows:
-		count=count+1
-		if count==1:
-			descr= row["description"]
-			GeneSeq=Seq(row["sequence.residues"])
-			GeneSysName=row["secondaryIdentifier"]
-			#print(" ")
-			#print("I think you want...... "+row["secondaryIdentifier"])
-			#print(row["description"])
-			#print(" ")
-			#print(row["sequence.residues"])
-			#print(" ")
-			#print("Good choice! I have a feeling you're going to get lucky with this one.")
-			#print(" ")
-			#print("Give me a second to put some of my ducks in a circle...")
-
-
-
-	#let's create a record for the oldGene
-	GeneRecord = SeqRecord(GeneSeq, id=GeneSysName)
-
-	#now let's add some more information to make it useful
-	GeneRecord.name=GeneName
-	GeneRecord.features=GeneSysName
-	GeneRecord.description=descr
-
-	return GeneRecord
+#let's create a record for the oldGene
+    DesiredSeq = sg.gene[GeneName].cds.seq
+    
+    GeneRecord = SeqRecord(DesiredSeq, name=GeneName)
+    
+    #now let's add some more information to make it useful
+    GeneRecord.features=str(sg.gene[GeneName])[-7:]
+    GeneRecord.description=sg.gene[GeneName].short_description
+    
+    return GeneRecord
 
 def fetchNeighbor(NeighborRecord, direction, distance):
 
